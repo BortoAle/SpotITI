@@ -8,9 +8,7 @@
 import CoreBluetooth
 
 struct DiscoveredPeripheral: Identifiable {
-		// Struct to represent a discovered peripheral
 		let id = UUID()
 		var peripheral: CBPeripheral
-		var advertisedData: String
 		var RSSI: NSNumber
 }

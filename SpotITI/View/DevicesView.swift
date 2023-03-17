@@ -9,7 +9,8 @@ import SwiftUI
 import CoreBluetooth
 
 struct DevicesView: View {
-	@ObservedObject private var bluetoothScanner = BluetoothScanner()
+	
+	@EnvironmentObject var bluetoothScanner: BluetoothScanner
 	@State var selectedDevice: DiscoveredPeripheral?
 	@State private var searchText = ""
 	
@@ -21,7 +22,7 @@ struct DevicesView: View {
 				#if os(macOS)
 				HStack {
 					Text(discoveredPeripheral.peripheral.name ?? "Unknown Device")
-					Text(discoveredPeripheral.RSSI.stringValue)
+					Text(discoveredPeripheral.peripheral.identifier.uuidString)
 						.font(.caption)
 						.foregroundColor(.gray)
 				}
@@ -32,13 +33,16 @@ struct DevicesView: View {
 				Button {
 					selectedDevice = discoveredPeripheral
 				} label: {
-					VStack(alignment: .leading) {
+					VStack(alignment: .leading, spacing: 4) {
 						Text(discoveredPeripheral.peripheral.name ?? "Unknown Device")
-						Text(discoveredPeripheral.RSSI.stringValue)
+							.font(.headline)
+							.foregroundColor(.primary)
+						Text(discoveredPeripheral.peripheral.identifier.uuidString)
 							.font(.caption)
 							.foregroundColor(.gray)
 					}
 				}
+				.padding(.vertical, 4)
 				#endif
 			}
 			.listStyle(.automatic)
@@ -69,11 +73,18 @@ struct DevicesView: View {
 			}
 		}) {
 			if bluetoothScanner.isScanning {
-				Text("Stop Scanning")
+				HStack {
+					Text("Stop")
+					Image(systemName: "antenna.radiowaves.left.and.right.slash")
+				}
 			} else {
-				Text("Scan for Devices")
+				HStack {
+					Text("Start")
+					Image(systemName: "antenna.radiowaves.left.and.right")
+				}
 			}
 		}
+		.buttonStyle(.borderedProminent)
 	}
 	
 }
