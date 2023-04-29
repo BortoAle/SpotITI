@@ -32,7 +32,7 @@ struct DeviceDetailView: View {
 		.frame(maxWidth: .infinity, maxHeight: .infinity)
 		.background( bgColor )
 		.animation(.easeInOut, value: bgColor)
-		.onAppear {
+		. onAppear {
 			startTimer()
 		}
 		.onDisappear {

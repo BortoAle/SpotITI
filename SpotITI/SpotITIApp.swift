@@ -12,10 +12,13 @@ struct SpotITIApp: App {
 	
 	@ObservedObject private var bluetoothScanner = BluetoothScanner()
 	
-    var body: some Scene {
-        WindowGroup {
-            DevicesView()
-				.environmentObject(bluetoothScanner)
-        }
-    }
+	var body: some Scene {
+		WindowGroup {
+			QRScannerView()
+//			CompassView()
+//			DeviceListView()
+//				.frame(minWidth: 800, minHeight: 600)
+//				.environmentObject(bluetoothScanner)
+		}
+	}
 }

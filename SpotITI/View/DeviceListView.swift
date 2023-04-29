@@ -1,5 +1,5 @@
 //
-//  DevicesView.swift
+//  DeviceListView.swift
 //  SpotITI
 //
 //  Created by Alessandro Bortoluzzi on 15/03/23.
@@ -8,7 +8,7 @@
 import SwiftUI
 import CoreBluetooth
 
-struct DevicesView: View {
+struct DeviceListView: View {
 	
 	@EnvironmentObject var bluetoothScanner: BluetoothScanner
 	@State var selectedDevice: DiscoveredPeripheral?
@@ -17,11 +17,13 @@ struct DevicesView: View {
 	var body: some View {
 		NavigationStack {
 			List(bluetoothScanner.discoveredPeripherals.filter {
-				self.searchText.isEmpty ? true : $0.peripheral.name?.lowercased().contains(self.searchText.lowercased()) == true
+				self.searchText.isEmpty ? true : $0.peripheral.identifier.uuidString.lowercased().contains(self.searchText.lowercased()) == true 
 			}, id: \.peripheral.identifier) { discoveredPeripheral in
 				#if os(macOS)
-				HStack {
+				VStack(alignment: .leading, spacing: 4) {
 					Text(discoveredPeripheral.peripheral.name ?? "Unknown Device")
+						.font(.headline)
+						.foregroundColor(.primary)
 					Text(discoveredPeripheral.peripheral.identifier.uuidString)
 						.font(.caption)
 						.foregroundColor(.gray)
@@ -89,9 +91,9 @@ struct DevicesView: View {
 	
 }
 
-struct DevicesView_Previews: PreviewProvider {
+struct DeviceListView_Previews: PreviewProvider {
 	static var previews: some View {
-		DevicesView()
+		DeviceListView()
 	}
 }
 
