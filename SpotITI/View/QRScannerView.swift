@@ -11,32 +11,17 @@ struct QRScannerView: View {
 	@StateObject var qrCodeScanner = QRCodeScanner()
 
 	var body: some View {
-		ZStack {
-			VStack {
-
-				Button(action: {
-					qrCodeScanner.startScanning()
-				}) {
-					Text("Inizia scansione")
-				}
-				.padding()
-
-				Button(action: {
-					qrCodeScanner.stopScanning()
-				}) {
-					Text("Ferma scansione")
-				}
-				
+			ZStack {
 				CameraPreviewView(session: qrCodeScanner.session) // Aggiungi la vista della fotocamera
 					.clipShape(RoundedRectangle(cornerRadius: 25))
 					.shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 0)
+				Text("Valore QR Code: \(qrCodeScanner.qrCodeValue)")
+					.padding()
 			}
 			.padding()
 			
-			Text("Valore QR Code: \(qrCodeScanner.qrCodeValue)")
-				.padding()
-		}
-		
+		.onAppear { qrCodeScanner.startScanning() }
+		.onDisappear { qrCodeScanner.stopScanning() }
 	}
 }
 

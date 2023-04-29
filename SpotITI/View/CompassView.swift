@@ -98,11 +98,10 @@ struct CompassView: View {
 
 	var body: some View {
 		VStack {
-			Image("piantina") // Replace "north_arrow" with your image asset name
+			Image(systemName: "arrow.up") // Replace "north_arrow" with your image asset name
 				.resizable()
 				.scaledToFit()
-//				.frame(width: 180)
-				.frame(maxWidth: .infinity)
+				.frame(width: 130)
 				.fontWeight(.black)
 				.rotationEffect(.degrees(-viewModel.heading))
 				.rotation3DEffect(
@@ -131,16 +130,6 @@ struct CompassView: View {
 								}
 					}
 					.frame(maxHeight: .infinity, alignment: .center)
-			
-			Text("Corridoio A")
-				.font(.title2)
-				.fontWeight(.semibold)
-				.padding()
-				.padding(.horizontal, 32)
-				.background(
-				Capsule()
-					.foregroundColor(Color(uiColor: UIColor.secondarySystemBackground))
-				)
 		}
 	}
 }
