@@ -16,6 +16,7 @@ class LocationManager: NSObject, ObservableObject, AVCaptureMetadataOutputObject
 	@Published var currentVertex: Vertex? = nil
 	@Published var selectedMap: Map? = nil
 	@Published var canReachServer: Bool = true
+	@Published var currentView: ViewType = .home
 	
 	@Published var qrCodeValue: String = "" {
 		didSet {
