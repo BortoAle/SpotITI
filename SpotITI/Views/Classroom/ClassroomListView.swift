@@ -30,10 +30,6 @@ struct ClassroomListView: View {
 						Text("Blocco")
 					}
 					VStack {
-						Image(systemName: "square.fill")
-						Text("Tipo")
-					}
-					VStack {
 						Image(systemName: "chair")
 						Text("Posti")
 					}
@@ -52,7 +48,6 @@ struct ClassroomListView: View {
 							.font(.headline)
 						Text("2")
 						Text("H")
-						Text("LAB")
 						Text("18")
 						Image(systemName: "checkmark.seal")
 							.foregroundColor(.green)

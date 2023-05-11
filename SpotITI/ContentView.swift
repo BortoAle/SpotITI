@@ -27,30 +27,27 @@ struct ContentView: View {
 				CompassView()
 					.frame(maxHeight: .infinity, alignment: .center)
 				
-				VStack {
-					Capsule()
-						.frame(width: 40, height: 6)
-						.foregroundColor(.gray.opacity(0.5))
-						.padding()
 						VStack {
 							switch locationManager.currentView {
 								case .home:
 									ClassroomListView()
 										.searchable(text: .constant(""))
 								case .detail:
-									NavigationPreviewView()
+										NavigationPreviewView()
 								case .navigation:
-									NavigationView()
+									VStack {
+										NavigationView()
+									}
 							}
 						}
-				}
+						.padding(.top)
 				.background {
 					RoundedRectangle(cornerRadius: 25)
 						.foregroundColor(.gray.opacity(0.1))
 						.ignoresSafeArea()
 				}
+				
 			}
-			
 		}
 		//		.sheet(isPresented: $showNavigationView) {
 		//			NavigationStack {
