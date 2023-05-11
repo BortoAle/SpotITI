@@ -14,6 +14,7 @@ import CoreHaptics
 class CompassViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
 	@Published var heading: Double = 0
 	@Published var rotation3D: (x: CGFloat, y: CGFloat, z: CGFloat) = (0, 0, 0)
+
 	
 	private var filteredAcceleration: (x: Double, y: Double) = (0, 0)
 
@@ -47,8 +48,8 @@ class CompassViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
 					let rotationY = CGFloat(filteredX) * 90
 					
 					// Clamping the rotation values
-					let clampedRotationX = min(max(rotationX, -70), 70)
-					let clampedRotationY = min(max(rotationY, -70), 70)
+					let clampedRotationX = min(max(rotationX, -50), 50)
+					let clampedRotationY = min(max(rotationY, -50), 50)
 					
 					self.rotation3D.x = clampedRotationX
 					self.rotation3D.y = clampedRotationY
@@ -56,6 +57,7 @@ class CompassViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
 			}
 	}
 
+	
 	func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
 		DispatchQueue.main.async {
 			self.heading = newHeading.trueHeading
@@ -101,7 +103,7 @@ struct CompassView: View {
 			Image(systemName: "arrow.up") // Replace "north_arrow" with your image asset name
 				.resizable()
 				.scaledToFit()
-				.frame(width: 130)
+				.frame(height: 200)
 				.fontWeight(.black)
 				.rotationEffect(.degrees(-viewModel.heading))
 				.rotation3DEffect(
@@ -129,7 +131,6 @@ struct CompassView: View {
 									isInsideDirection = false
 								}
 					}
-					.frame(maxHeight: .infinity, alignment: .center)
 		}
 	}
 }
