@@ -10,100 +10,66 @@ import SwiftUI
 struct NavigationPreviewView: View {
 	
 	@EnvironmentObject var locationManager: LocationManager
+	var namespace: Namespace.ID
 	
     var body: some View {
-		VStack(spacing: 48) {
-			Grid {
-				GridRow {
-					VStack {
-						Image(systemName: "door.sliding.right.hand.open")
-						Text("Aula")
-					}
-					VStack {
-						Image(systemName: "stairs")
-						Text("Piano")
-					}
-					VStack {
-						Image(systemName: "house")
-						Text("Blocco")
-					}
-					VStack {
-						Image(systemName: "chair")
-						Text("Posti")
-					}
-					VStack {
-						Image(systemName: "pc")
-						Text("Lim")
-					}
-				}
-				.font(.subheadline)
-				.foregroundColor(.secondary)
-				
-					Divider()
-					GridRow {
-						Text("AB")
-							.font(.headline)
-						Text("2")
-						Text("H")
-						Text("18")
-						Image(systemName: "checkmark.seal")
-							.foregroundColor(.green)
-				}
-				.padding(.top, 8)
-			}
+		VStack(spacing: 32) {
 			
 			HStack {
-				Grid {
-					GridRow {
-						Text("Piano")
-						Text("Blocco")
-					}
-					.font(.caption)
-					.foregroundColor(.secondary)
-					GridRow {
-						Text("1")
-						Text("A")
-					}
-					.font(.title)
-					.fontWeight(.bold)
+				Text("Navigazione verso AB")
+					.font(.headline)
+				Spacer()
+				Button {
+					locationManager.currentView = .home
+					locationManager.selectedDetent = .fraction(0.99)
+				} label: {
+					Image(systemName: "xmark")
+						.padding(8)
+						.background {
+							Circle()
+								.foregroundColor(.gray.opacity(0.2))
+						}
 				}
-				
-				ZStack {
-					Circle()
-						.frame(width: 35, height: 35)
-						.foregroundColor(.white)
-						.shadow(color: .blue.opacity(0.2), radius: 5)
-					Circle()
-						.frame(width: 25, height: 25)
-						.foregroundColor(.blue)
-				}
-				Rectangle()
-					.frame(height: 6)
-					.foregroundColor(.gray.opacity(0.3))
-				ZStack {
-					Circle()
-						.frame(width: 35, height: 35)
-						.foregroundColor(.gray)
-					Circle()
-						.frame(width: 25, height: 25)
-						.foregroundColor(.white)
-				}
-				
-				Grid {
-					GridRow {
-						Text("Piano")
-						Text("Blocco")
-					}
-					.font(.caption)
-					.foregroundColor(.secondary)
-					GridRow {
-						Text("1")
-						Text("A")
-					}
-					.font(.title)
-					.fontWeight(.bold)
-				}
+				.tint(.gray)
 			}
+				
+				Grid {
+					GridRow {
+						VStack {
+							Image(systemName: "door.sliding.right.hand.open")
+							Text("Aula")
+						}
+						VStack {
+							Image(systemName: "stairs")
+							Text("Piano")
+						}
+						VStack {
+							Image(systemName: "house")
+							Text("Blocco")
+						}
+						VStack {
+							Image(systemName: "chair")
+							Text("Posti")
+						}
+						VStack {
+							Image(systemName: "pc")
+							Text("Lim")
+						}
+					}
+					.font(.subheadline)
+					.foregroundColor(.secondary)
+					
+						Divider()
+						GridRow {
+							Text("AB")
+								.font(.headline)
+							Text("2")
+							Text("H")
+							Text("18")
+							Image(systemName: "checkmark.seal")
+								.foregroundColor(.green)
+					}
+				}
 			
 			HStack(spacing: 32) {
 				Text("12:24 • 13min")
@@ -111,7 +77,11 @@ struct NavigationPreviewView: View {
 					.foregroundColor(.secondary)
 				
 				Button {
-					locationManager.currentView = .navigation
+					withAnimation(.easeInOut) {
+						locationManager.currentView = .navigation
+					}
+					locationManager.selectedDetent = .fraction(0.35)
+
 				} label: {
 					HStack {
 						Image(systemName: "paperplane.fill")
@@ -134,8 +104,11 @@ struct NavigationPreviewView: View {
 }
 
 struct NavigationPreviewView_Previews: PreviewProvider {
+	
+	@Namespace static var namespace
+	
     static var previews: some View {
-        NavigationPreviewView()
+		NavigationPreviewView(namespace: namespace)
 			.previewLayout(.sizeThatFits)
 			.environmentObject(LocationManager())
     }

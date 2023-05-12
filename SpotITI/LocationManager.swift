@@ -11,12 +11,14 @@ import SwiftUI
 class LocationManager: NSObject, ObservableObject, AVCaptureMetadataOutputObjectsDelegate {
 	
 	let session = AVCaptureSession()
-	
 	@Published var maps: [Map] = []
 	@Published var currentVertex: Vertex? = nil
 	@Published var selectedMap: Map? = nil
 	@Published var canReachServer: Bool = true
 	@Published var currentView: ViewType = .home
+	
+	@Published var selectedDetent: PresentationDetent = .fraction(0.99)
+	@Published var presentationDetents: Set<PresentationDetent> = [.fraction(0.99), .fraction(0.45), .fraction(0.35)]
 	
 	@Published var qrCodeValue: String = "" {
 		didSet {

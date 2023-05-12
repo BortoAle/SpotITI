@@ -13,64 +13,51 @@ enum ViewType {
 
 struct ContentView: View {
 	
-	@State var showNavigationView: Bool = true
 	@EnvironmentObject var locationManager: LocationManager
-	
+	@Namespace var namespace
 	
 	var body: some View {
 		ZStack {
 			CameraPreviewView(session: locationManager.session)
-				.frame(maxWidth: .infinity, maxHeight: .infinity)
+//				.frame(maxWidth: .infinity, maxHeight: .infinity)
 				.ignoresSafeArea()
 			
-			VStack {
-				CompassView()
-					.frame(maxHeight: .infinity, alignment: .center)
-				
+//			Rectangle()
+//				.fill(.ultraThinMaterial)
+//				.frame(height: 40)
+//				.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+//				.ignoresSafeArea()
+			
+			CompassView()
+				.offset(y: -120)
+				.opacity(0.9)
+		}
+		.sheet(isPresented: .constant(true)) {
+					NavigationStack {
+		
 						VStack {
 							switch locationManager.currentView {
 								case .home:
-									ClassroomListView()
+									ClassroomListView(namespace: namespace)
 										.searchable(text: .constant(""))
 								case .detail:
-										NavigationPreviewView()
+									NavigationPreviewView(namespace: namespace)
 								case .navigation:
-									VStack {
-										NavigationView()
-									}
+									NavigationView()
 							}
 						}
-						.padding(.top)
-				.background {
-					RoundedRectangle(cornerRadius: 25)
-						.foregroundColor(.gray.opacity(0.1))
-						.ignoresSafeArea()
+						.toolbar(locationManager.currentView == .home ? .visible : .hidden, for: .navigationBar)
+						.navigationTitle("Aule")
+						.navigationBarTitleDisplayMode(.inline)
+		
+					}
+					.presentationDetents(locationManager.presentationDetents, selection: $locationManager.selectedDetent)
+					.presentationBackgroundInteraction(.enabled)
+					.interactiveDismissDisabled(true)
+//					.padding(.vertical)
+					.presentationCornerRadius(30)
+					.presentationDragIndicator(.hidden)
 				}
-				
-			}
-		}
-		//		.sheet(isPresented: $showNavigationView) {
-		//			NavigationStack {
-		//
-		//				VStack {
-		//					switch locationManager.currentView {
-		//						case .home:
-		//							ClassroomListView()
-		//								.searchable(text: .constant(""))
-		//						case .detail:
-		//								NavigationPreviewView()
-		//						case .navigation:
-		//							NavigationView()
-		//					}
-		//				}
-		//				.toolbar(locationManager.currentView == .home ? .visible : .hidden, for: .navigationBar)
-		//				.navigationTitle("Aule")
-		//
-		//			}
-		//			.presentationDetents([locationManager.currentView == .home ? .fraction(0.99) : locationManager.currentView == .detail ? .fraction(0.4) : .fraction(0.35)])
-		//			.presentationBackgroundInteraction(.enabled)
-		//			.interactiveDismissDisabled(true)
-		//		}
 		.task {
 			locationManager.maps = await locationManager.fetchMaps()
 		}

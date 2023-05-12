@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct NavigationView: View {
+	
+	@EnvironmentObject var locationManager: LocationManager
+	
     var body: some View {
 		VStack(spacing: 48) {
 			HStack {
@@ -73,13 +76,19 @@ struct NavigationView: View {
 			
 			HStack(spacing: 32) {
 				Button {
-					print("HI")
+					withAnimation(.easeInOut) {
+						locationManager.currentView = .home
+					}
+					locationManager.selectedDetent = .fraction(0.99)
+//					DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+//						locationManager.presentationDetents = [.fraction(0.99), .fraction(0.45)]
+//					}
 				} label: {
 					HStack {
 						Image(systemName: "xmark")
 						Text("Termina")
 					}
-					.font(.title2)
+					.font(.title3)
 					.fontWeight(.semibold)
 					.padding(8)
 					.padding(.horizontal, 8)
@@ -99,5 +108,6 @@ struct NavigationView: View {
 struct NavigationView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView()
+			.environmentObject(LocationManager())
     }
 }

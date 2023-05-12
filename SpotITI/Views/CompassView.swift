@@ -48,8 +48,8 @@ class CompassViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
 					let rotationY = CGFloat(filteredX) * 90
 					
 					// Clamping the rotation values
-					let clampedRotationX = min(max(rotationX, -50), 50)
-					let clampedRotationY = min(max(rotationY, -50), 50)
+					let clampedRotationX = min(max(rotationX, -70), 70)
+					let clampedRotationY = min(max(rotationY, -70), 70)
 					
 					self.rotation3D.x = clampedRotationX
 					self.rotation3D.y = clampedRotationY
@@ -100,11 +100,12 @@ struct CompassView: View {
 
 	var body: some View {
 		VStack {
-			Image(systemName: "arrow.up") // Replace "north_arrow" with your image asset name
+			Image(systemName: "arrow.up")
 				.resizable()
 				.scaledToFit()
 				.frame(height: 200)
 				.fontWeight(.black)
+				.foregroundColor(Color(uiColor: .secondarySystemBackground))
 				.rotationEffect(.degrees(-viewModel.heading))
 				.rotation3DEffect(
 					.degrees(viewModel.rotation3D.x),
@@ -122,7 +123,7 @@ struct CompassView: View {
 				)
 				.foregroundColor(backgroundColor)
 					.onReceive(viewModel.$heading) { heading in
-						if abs(heading) < 10 { // Change this condition to match the desired direction
+						if abs(heading) < 10 {
 									if !isInsideDirection {
 										isInsideDirection = true
 										showDirectionFeedback()

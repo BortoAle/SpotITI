@@ -10,6 +10,7 @@ import SwiftUI
 struct ClassroomListView: View {
 	
 	@EnvironmentObject var locationManager: LocationManager
+	var namespace: Namespace.ID
 	
 	var body: some View {
 		
@@ -21,6 +22,7 @@ struct ClassroomListView: View {
 						Image(systemName: "door.sliding.right.hand.open")
 						Text("Aula")
 					}
+					//					.matchedGeometryEffect(id: "row", in: namespace)
 					VStack {
 						Image(systemName: "stairs")
 						Text("Piano")
@@ -43,17 +45,24 @@ struct ClassroomListView: View {
 				
 				ForEach(0..<10) { _ in
 					Divider()
-					GridRow {
-						Text("AB")
-							.font(.headline)
-						Text("2")
-						Text("H")
-						Text("18")
-						Image(systemName: "checkmark.seal")
-							.foregroundColor(.green)
-					}
+						GridRow {
+							Text("AB")
+								.font(.headline)
+							Text("2")
+							Text("H")
+							Text("18")
+							Image(systemName: "checkmark.seal")
+								.foregroundColor(.green)
+						}
 					.onTapGesture {
-						locationManager.currentView = .detail
+						withAnimation(.easeInOut) {
+							locationManager.currentView = .detail
+						}
+						locationManager.selectedDetent = .fraction(0.45)
+						
+//							DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+//								locationManager.presentationDetents = [.fraction(0.45)]
+//							}
 					}
 				}
 				.padding(.vertical, 8)
@@ -64,8 +73,10 @@ struct ClassroomListView: View {
 }
 
 struct ClassroomListView_Previews: PreviewProvider {
+	@Namespace static var namespace
+	
 	static var previews: some View {
-		ClassroomListView()
+		ClassroomListView(namespace: namespace)
 			.environmentObject(LocationManager())
 	}
 }
