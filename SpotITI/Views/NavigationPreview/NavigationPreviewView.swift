@@ -71,10 +71,24 @@ struct NavigationPreviewView: View {
 					}
 				}
 			
-			HStack(spacing: 32) {
-				Text("12:24 • 13min")
-					.font(.headline)
-					.foregroundColor(.secondary)
+			HStack(alignment: .center, spacing: 32) {
+				
+				HStack(spacing: 16) {
+					VStack {
+						Text("Arrivo")
+						Text("12:24")
+							.font(.headline)
+							.foregroundColor(.secondary)
+					}
+					
+					VStack {
+						Text("Durata")
+						Text("13min")
+							.font(.headline)
+							.foregroundColor(.secondary)
+					}
+				}
+				.frame(maxWidth: .infinity, alignment: .center)
 				
 				Button {
 					withAnimation(.easeInOut) {
@@ -96,7 +110,6 @@ struct NavigationPreviewView: View {
 				.buttonStyle(.borderedProminent)
 
 			}
-			.frame(maxWidth: .infinity, alignment: .bottomTrailing)
 			
 		}
 		.padding()

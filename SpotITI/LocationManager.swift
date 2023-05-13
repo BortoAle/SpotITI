@@ -67,25 +67,25 @@ extension LocationManager {
 extension LocationManager {
 	
 	func startScanning() {
-		guard !session.isRunning else { return }
-		
-		let wideAngleCamera = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInUltraWideCamera, .builtInWideAngleCamera], mediaType: .video, position: .back).devices.first
-		guard let device = wideAngleCamera, let input = try? AVCaptureDeviceInput(device: device) else { return }
-		
-		if session.canAddInput(input) {
-			session.addInput(input)
+			guard !session.isRunning else { return }
+			
+			let wideAngleCamera = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInWideAngleCamera], mediaType: .video, position: .back).devices.first
+			guard let device = wideAngleCamera, let input = try? AVCaptureDeviceInput(device: device) else { return }
+			
+			if session.canAddInput(input) {
+				session.addInput(input)
+			}
+			
+			let output = AVCaptureMetadataOutput()
+			if session.canAddOutput(output) {
+				session.addOutput(output)
+			}
+			
+			output.setMetadataObjectsDelegate(self, queue: DispatchQueue.main)
+			output.metadataObjectTypes = [.ean8]
+			
+			session.startRunning()
 		}
-		
-		let output = AVCaptureMetadataOutput()
-		if session.canAddOutput(output) {
-			session.addOutput(output)
-		}
-		
-		output.setMetadataObjectsDelegate(self, queue: DispatchQueue.main)
-		output.metadataObjectTypes = [.microQR]
-		
-			self.session.startRunning()
-	}
 	
 	func stopScanning() {
 		session.stopRunning()
@@ -93,7 +93,7 @@ extension LocationManager {
 	}
 	
 	func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
-		guard let object = metadataObjects.first as? AVMetadataMachineReadableCodeObject, object.type == .microQR, let stringValue = object.stringValue else { return }
+		guard let object = metadataObjects.first as? AVMetadataMachineReadableCodeObject, object.type == .ean8, let stringValue = object.stringValue else { return }
 		
 		qrCodeValue = stringValue
 	}

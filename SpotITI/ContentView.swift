@@ -15,6 +15,7 @@ struct ContentView: View {
 	
 	@EnvironmentObject var locationManager: LocationManager
 	@Namespace var namespace
+	@State var showDebugAlert: Bool = false
 	
 	var body: some View {
 		ZStack {
@@ -34,6 +35,10 @@ struct ContentView: View {
 		}
 		.sheet(isPresented: .constant(true)) {
 					NavigationStack {
+						
+						if showDebugAlert {
+							Text(locationManager.qrCodeValue)
+						}
 		
 						VStack {
 							switch locationManager.currentView {
@@ -48,6 +53,16 @@ struct ContentView: View {
 						}
 						.toolbar(locationManager.currentView == .home ? .visible : .hidden, for: .navigationBar)
 						.navigationTitle("Aule")
+						.toolbar(content: {
+							ToolbarItem(placement: .navigationBarTrailing) {
+								Button {
+									showDebugAlert = true
+								} label: {
+									Image(systemName: "info.circle")
+								}
+
+							}
+						})
 						.navigationBarTitleDisplayMode(.inline)
 		
 					}

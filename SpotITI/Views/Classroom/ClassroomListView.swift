@@ -22,7 +22,6 @@ struct ClassroomListView: View {
 						Image(systemName: "door.sliding.right.hand.open")
 						Text("Aula")
 					}
-					//					.matchedGeometryEffect(id: "row", in: namespace)
 					VStack {
 						Image(systemName: "stairs")
 						Text("Piano")
@@ -58,16 +57,11 @@ struct ClassroomListView: View {
 						withAnimation(.easeInOut) {
 							locationManager.currentView = .detail
 						}
-						locationManager.selectedDetent = .fraction(0.45)
-						
-//							DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-//								locationManager.presentationDetents = [.fraction(0.45)]
-//							}
+						locationManager.selectedDetent = .fraction(0.35)
 					}
 				}
 				.padding(.vertical, 8)
 			}
-			.padding(.horizontal)
 		}
 	}
 }
