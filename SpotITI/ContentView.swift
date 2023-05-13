@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import AVFoundation
 
 enum ViewType {
 	case home, detail, navigation
@@ -14,15 +15,19 @@ enum ViewType {
 struct ContentView: View {
 	
 	@EnvironmentObject var locationManager: LocationManager
+	@EnvironmentObject var scanner: ScanditEAN8Scanner
 	@Namespace var namespace
 	@State var showDebugAlert: Bool = false
 	@State var showCurrentPosition: Bool = true
 	
 	var body: some View {
 		ZStack {
-			CameraPreviewView(session: locationManager.session)
-//				.frame(maxWidth: .infinity, maxHeight: .infinity)
+			ScannerView(scanner: scanner)
 				.ignoresSafeArea()
+			
+//			CameraPreviewView(session: locationManager.session)
+//				.frame(maxWidth: .infinity, maxHeight: .infinity)
+//				.ignoresSafeArea()
 			
 //			Rectangle()
 //				.fill(.ultraThinMaterial)
@@ -39,7 +44,7 @@ struct ContentView: View {
 				NavigationStack {
 							
 							if showDebugAlert {
-								Text(locationManager.qrCodeValue)
+								Text(scanner.ean8Code ?? "NON LETTO")
 							}
 			
 							VStack {
@@ -58,7 +63,7 @@ struct ContentView: View {
 							.toolbar(content: {
 								ToolbarItem(placement: .navigationBarTrailing) {
 									Button {
-										showDebugAlert = true
+										showDebugAlert.toggle()
 									} label: {
 										Image(systemName: "info.circle")
 									}
@@ -73,6 +78,18 @@ struct ContentView: View {
 	//					.padding(.vertical)
 						.presentationCornerRadius(30)
 					.presentationDragIndicator(.hidden)
+					.onChange(of: scanner.ean8Code, perform: { value in
+						if showDebugAlert {
+							if let soundURL = Bundle.main.url(forResource: "beep", withExtension: "m4a") {
+								var soundID: SystemSoundID = 0
+								AudioServicesCreateSystemSoundID(soundURL as CFURL, &soundID)
+								AudioServicesPlaySystemSound(soundID)
+							}
+							
+					let generator = UIImpactFeedbackGenerator(style: .heavy)
+							generator.impactOccurred()
+						}
+							})
 				
 //				PositionDotView()
 //					.ignoresSafeArea()
@@ -85,9 +102,9 @@ struct ContentView: View {
 		}
 		.onAppear {
 			locationManager.selectedMap = locationManager.maps.first
-			locationManager.startScanning()
+//			locationManager.startScanning()
 		}
-		.onDisappear { locationManager.stopScanning() }
+//		.onDisappear { locationManager.stopScanning() }
 	}
 }
 

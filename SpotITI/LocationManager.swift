@@ -7,6 +7,7 @@
 
 import AVFoundation
 import SwiftUI
+import ScanditBarcodeCapture
 
 class LocationManager: NSObject, ObservableObject, AVCaptureMetadataOutputObjectsDelegate {
 	

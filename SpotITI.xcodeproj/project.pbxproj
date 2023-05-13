@@ -21,6 +21,11 @@
 		6AFD7B462A0F836500B52A9C /* ClassroomCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AFD7B452A0F836500B52A9C /* ClassroomCard.swift */; };
 		6AFD7B482A0F8C1C00B52A9C /* UtilityCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AFD7B472A0F8C1C00B52A9C /* UtilityCard.swift */; };
 		6AFD7B4A2A0F8DC800B52A9C /* PositionDotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AFD7B492A0F8DC800B52A9C /* PositionDotView.swift */; };
+		6AFD7B522A0FEC4500B52A9C /* ScanditBarcodeCapture in Frameworks */ = {isa = PBXBuildFile; productRef = 6AFD7B512A0FEC4500B52A9C /* ScanditBarcodeCapture */; };
+		6AFD7B542A0FEC4500B52A9C /* ScanditCaptureCore in Frameworks */ = {isa = PBXBuildFile; productRef = 6AFD7B532A0FEC4500B52A9C /* ScanditCaptureCore */; };
+		6AFD7B562A0FEC5600B52A9C /* ScanditEAN8Scanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AFD7B552A0FEC5600B52A9C /* ScanditEAN8Scanner.swift */; };
+		6AFD7B582A0FF1FE00B52A9C /* ScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AFD7B572A0FF1FE00B52A9C /* ScannerView.swift */; };
+		6AFD7B5B2A0FF9D400B52A9C /* confirm.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 6AFD7B592A0FF9CE00B52A9C /* confirm.m4a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,6 +44,9 @@
 		6AFD7B452A0F836500B52A9C /* ClassroomCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassroomCard.swift; sourceTree = "<group>"; };
 		6AFD7B472A0F8C1C00B52A9C /* UtilityCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityCard.swift; sourceTree = "<group>"; };
 		6AFD7B492A0F8DC800B52A9C /* PositionDotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PositionDotView.swift; sourceTree = "<group>"; };
+		6AFD7B552A0FEC5600B52A9C /* ScanditEAN8Scanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanditEAN8Scanner.swift; sourceTree = "<group>"; };
+		6AFD7B572A0FF1FE00B52A9C /* ScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerView.swift; sourceTree = "<group>"; };
+		6AFD7B592A0FF9CE00B52A9C /* confirm.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = confirm.m4a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -46,6 +54,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6AFD7B522A0FEC4500B52A9C /* ScanditBarcodeCapture in Frameworks */,
+				6AFD7B542A0FEC4500B52A9C /* ScanditCaptureCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -56,6 +66,7 @@
 			isa = PBXGroup;
 			children = (
 				6A2A1C3C29C2330200FC359F /* SpotITI */,
+				6AFD7B592A0FF9CE00B52A9C /* confirm.m4a */,
 				6A2A1C3B29C2330200FC359F /* Products */,
 			);
 			sourceTree = "<group>";
@@ -79,6 +90,8 @@
 				6A2A1C4329C2330300FC359F /* Preview Content */,
 				6A4151C429FD00BB001DF926 /* LocationManager.swift */,
 				6AFD7B492A0F8DC800B52A9C /* PositionDotView.swift */,
+				6AFD7B552A0FEC5600B52A9C /* ScanditEAN8Scanner.swift */,
+				6AFD7B572A0FF1FE00B52A9C /* ScannerView.swift */,
 			);
 			path = SpotITI;
 			sourceTree = "<group>";
@@ -153,6 +166,10 @@
 			dependencies = (
 			);
 			name = SpotITI;
+			packageProductDependencies = (
+				6AFD7B512A0FEC4500B52A9C /* ScanditBarcodeCapture */,
+				6AFD7B532A0FEC4500B52A9C /* ScanditCaptureCore */,
+			);
 			productName = SpotITI;
 			productReference = 6A2A1C3A29C2330200FC359F /* SpotITI.app */;
 			productType = "com.apple.product-type.application";
@@ -181,6 +198,9 @@
 				Base,
 			);
 			mainGroup = 6A2A1C3129C2330200FC359F;
+			packageReferences = (
+				6AFD7B502A0FEC4500B52A9C /* XCRemoteSwiftPackageReference "datacapture-spm" */,
+			);
 			productRefGroup = 6A2A1C3B29C2330200FC359F /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -197,6 +217,7 @@
 			files = (
 				6A2A1C4529C2330300FC359F /* Preview Assets.xcassets in Resources */,
 				6A2A1C4229C2330300FC359F /* Assets.xcassets in Resources */,
+				6AFD7B5B2A0FF9D400B52A9C /* confirm.m4a in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -209,8 +230,10 @@
 			files = (
 				6A4151C929FD023A001DF926 /* CameraPreviewView.swift in Sources */,
 				6A805F322A0D496900CAC807 /* NavigationPreviewView.swift in Sources */,
+				6AFD7B562A0FEC5600B52A9C /* ScanditEAN8Scanner.swift in Sources */,
 				6A805F352A0D499300CAC807 /* NavigationView.swift in Sources */,
 				6AFD7B4A2A0F8DC800B52A9C /* PositionDotView.swift in Sources */,
+				6AFD7B582A0FF1FE00B52A9C /* ScannerView.swift in Sources */,
 				6AFD7B482A0F8C1C00B52A9C /* UtilityCard.swift in Sources */,
 				6A9ED46629FD4F7000C34722 /* Map.swift in Sources */,
 				6A9ED46129FD2C7A00C34722 /* ContentView.swift in Sources */,
@@ -360,7 +383,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 0.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = dev.bortoluzzi.SpotITI;
+				PRODUCT_BUNDLE_IDENTIFIER = com.scandit.Scandit.SdkSamples.SimpleSampleUniversal;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SUPPORTS_MACCATALYST = NO;
@@ -392,7 +415,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 0.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = dev.bortoluzzi.SpotITI;
+				PRODUCT_BUNDLE_IDENTIFIER = com.scandit.Scandit.SdkSamples.SimpleSampleUniversal;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SUPPORTS_MACCATALYST = NO;
@@ -425,6 +448,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		6AFD7B502A0FEC4500B52A9C /* XCRemoteSwiftPackageReference "datacapture-spm" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Scandit/datacapture-spm";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		6AFD7B512A0FEC4500B52A9C /* ScanditBarcodeCapture */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6AFD7B502A0FEC4500B52A9C /* XCRemoteSwiftPackageReference "datacapture-spm" */;
+			productName = ScanditBarcodeCapture;
+		};
+		6AFD7B532A0FEC4500B52A9C /* ScanditCaptureCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6AFD7B502A0FEC4500B52A9C /* XCRemoteSwiftPackageReference "datacapture-spm" */;
+			productName = ScanditCaptureCore;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 6A2A1C3229C2330200FC359F /* Project object */;
 }
