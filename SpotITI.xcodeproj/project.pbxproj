@@ -26,6 +26,7 @@
 		6AFD7B562A0FEC5600B52A9C /* ScanditEAN8Scanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AFD7B552A0FEC5600B52A9C /* ScanditEAN8Scanner.swift */; };
 		6AFD7B582A0FF1FE00B52A9C /* ScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AFD7B572A0FF1FE00B52A9C /* ScannerView.swift */; };
 		6AFD7B5B2A0FF9D400B52A9C /* confirm.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 6AFD7B592A0FF9CE00B52A9C /* confirm.m4a */; };
+		6AFD7B5D2A100FB300B52A9C /* Secrets.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6AFD7B5C2A100FB300B52A9C /* Secrets.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,6 +48,7 @@
 		6AFD7B552A0FEC5600B52A9C /* ScanditEAN8Scanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanditEAN8Scanner.swift; sourceTree = "<group>"; };
 		6AFD7B572A0FF1FE00B52A9C /* ScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerView.swift; sourceTree = "<group>"; };
 		6AFD7B592A0FF9CE00B52A9C /* confirm.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = confirm.m4a; sourceTree = "<group>"; };
+		6AFD7B5C2A100FB300B52A9C /* Secrets.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Secrets.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,6 +94,7 @@
 				6AFD7B492A0F8DC800B52A9C /* PositionDotView.swift */,
 				6AFD7B552A0FEC5600B52A9C /* ScanditEAN8Scanner.swift */,
 				6AFD7B572A0FF1FE00B52A9C /* ScannerView.swift */,
+				6AFD7B5C2A100FB300B52A9C /* Secrets.plist */,
 			);
 			path = SpotITI;
 			sourceTree = "<group>";
@@ -215,6 +218,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6AFD7B5D2A100FB300B52A9C /* Secrets.plist in Resources */,
 				6A2A1C4529C2330300FC359F /* Preview Assets.xcassets in Resources */,
 				6A2A1C4229C2330300FC359F /* Assets.xcassets in Resources */,
 				6AFD7B5B2A0FF9D400B52A9C /* confirm.m4a in Resources */,

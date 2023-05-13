@@ -24,7 +24,7 @@ struct ScannerView: UIViewRepresentable {
 	}
 
 	func updateUIView(_ uiView: ScanditCaptureCore.DataCaptureView, context: Context) {
-		// Aggiorna la vista di acquisizione dati se necessario
+		
 	}
 }
 

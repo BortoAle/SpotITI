@@ -6,6 +6,9 @@ Objective-C.gitignore & Swift.gitignore
 ## User settings
 xcuserdata/
 
+#Configuration plist
+Secrets.plist
+
 ## compatibility with Xcode 8 and earlier (ignoring not required starting 
 Xcode 9)
 *.xcscmblueprint
