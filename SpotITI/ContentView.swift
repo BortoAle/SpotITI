@@ -16,6 +16,7 @@ struct ContentView: View {
 	@EnvironmentObject var locationManager: LocationManager
 	@Namespace var namespace
 	@State var showDebugAlert: Bool = false
+	@State var showCurrentPosition: Bool = true
 	
 	var body: some View {
 		ZStack {
@@ -34,44 +35,50 @@ struct ContentView: View {
 				.opacity(0.9)
 		}
 		.sheet(isPresented: .constant(true)) {
-					NavigationStack {
-						
-						if showDebugAlert {
-							Text(locationManager.qrCodeValue)
-						}
-		
-						VStack {
-							switch locationManager.currentView {
-								case .home:
-									ClassroomListView(namespace: namespace)
-										.searchable(text: .constant(""))
-								case .detail:
-									NavigationPreviewView(namespace: namespace)
-								case .navigation:
-									NavigationView()
+			ZStack {
+				NavigationStack {
+							
+							if showDebugAlert {
+								Text(locationManager.qrCodeValue)
 							}
-						}
-						.toolbar(locationManager.currentView == .home ? .visible : .hidden, for: .navigationBar)
-						.navigationTitle("Aule")
-						.toolbar(content: {
-							ToolbarItem(placement: .navigationBarTrailing) {
-								Button {
-									showDebugAlert = true
-								} label: {
-									Image(systemName: "info.circle")
+			
+							VStack {
+								switch locationManager.currentView {
+									case .home:
+										ClassroomListView(namespace: namespace)
+											.searchable(text: .constant(""))
+									case .detail:
+										NavigationPreviewView(namespace: namespace)
+									case .navigation:
+										NavigationView()
 								}
-
 							}
-						})
-						.navigationBarTitleDisplayMode(.inline)
-		
-					}
-					.presentationDetents(locationManager.presentationDetents, selection: $locationManager.selectedDetent)
-					.presentationBackgroundInteraction(.enabled)
-					.interactiveDismissDisabled(true)
-//					.padding(.vertical)
-					.presentationCornerRadius(30)
+							.toolbar(locationManager.currentView == .home ? .visible : .hidden, for: .navigationBar)
+							.navigationTitle("Aule")
+							.toolbar(content: {
+								ToolbarItem(placement: .navigationBarTrailing) {
+									Button {
+										showDebugAlert = true
+									} label: {
+										Image(systemName: "info.circle")
+									}
+
+								}
+							})
+							.navigationBarTitleDisplayMode(.inline)
+						}
+						.presentationDetents(locationManager.presentationDetents, selection: $locationManager.selectedDetent)
+						.presentationBackgroundInteraction(.enabled)
+						.interactiveDismissDisabled(true)
+	//					.padding(.vertical)
+						.presentationCornerRadius(30)
 					.presentationDragIndicator(.hidden)
+				
+//				PositionDotView()
+//					.ignoresSafeArea()
+//					.padding(.horizontal, 32)
+//					.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
+			}
 				}
 		.task {
 			locationManager.maps = await locationManager.fetchMaps()

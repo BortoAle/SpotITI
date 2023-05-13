@@ -15,53 +15,35 @@ struct ClassroomListView: View {
 	var body: some View {
 		
 		ScrollView {
-			
-			Grid {
-				GridRow {
-					VStack {
-						Image(systemName: "door.sliding.right.hand.open")
-						Text("Aula")
-					}
-					VStack {
-						Image(systemName: "stairs")
-						Text("Piano")
-					}
-					VStack {
-						Image(systemName: "house")
-						Text("Blocco")
-					}
-					VStack {
-						Image(systemName: "chair")
-						Text("Posti")
-					}
-					VStack {
-						Image(systemName: "pc")
-						Text("Lim")
+			VStack(alignment: .leading) {
+				Text("Utilità")
+					.font(.headline)
+				ScrollView(.horizontal, showsIndicators: false) {
+					HStack {
+						ForEach(0..<10) { _ in
+							UtilityCard(name: "👑Presidenza")
+						}
 					}
 				}
-				.font(.subheadline)
-				.foregroundColor(.secondary)
 				
-				ForEach(0..<10) { _ in
-					Divider()
-						GridRow {
-							Text("AB")
-								.font(.headline)
-							Text("2")
-							Text("H")
-							Text("18")
-							Image(systemName: "checkmark.seal")
-								.foregroundColor(.green)
-						}
-					.onTapGesture {
-						withAnimation(.easeInOut) {
-							locationManager.currentView = .detail
-						}
-						locationManager.selectedDetent = .fraction(0.35)
+				Text("Aule")
+					.font(.headline)
+				Text("A")
+					.font(.subheadline)
+					.foregroundColor(.secondary)
+				LazyVGrid(columns: [GridItem(.adaptive(minimum: 80))]) {
+					ForEach(0..<11) { _ in
+						ClassroomCard(name: "AB")
+							.onTapGesture {
+								withAnimation(.easeInOut) {
+									locationManager.currentView = .detail
+								}
+								locationManager.selectedDetent = .fraction(0.35)
+							}
 					}
 				}
-				.padding(.vertical, 8)
 			}
+			.padding()
 		}
 	}
 }

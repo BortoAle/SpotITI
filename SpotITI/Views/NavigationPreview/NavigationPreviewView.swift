@@ -17,7 +17,8 @@ struct NavigationPreviewView: View {
 			
 			HStack {
 				Text("Navigazione verso AB")
-					.font(.headline)
+					.font(.title3)
+					.fontWeight(.semibold)
 				Spacer()
 				Button {
 					locationManager.currentView = .home
@@ -36,16 +37,8 @@ struct NavigationPreviewView: View {
 				Grid {
 					GridRow {
 						VStack {
-							Image(systemName: "door.sliding.right.hand.open")
-							Text("Aula")
-						}
-						VStack {
-							Image(systemName: "stairs")
-							Text("Piano")
-						}
-						VStack {
-							Image(systemName: "house")
-							Text("Blocco")
+							Image(systemName: "house.lodge")
+							Text("Tipo")
 						}
 						VStack {
 							Image(systemName: "chair")
@@ -53,7 +46,15 @@ struct NavigationPreviewView: View {
 						}
 						VStack {
 							Image(systemName: "pc")
+							Text("N° PC")
+						}
+						VStack {
+							Image(systemName: "tv")
 							Text("Lim")
+						}
+						VStack {
+							Image(systemName: "videoprojector")
+							Text("Proiettore")
 						}
 					}
 					.font(.subheadline)
@@ -61,54 +62,64 @@ struct NavigationPreviewView: View {
 					
 						Divider()
 						GridRow {
-							Text("AB")
-								.font(.headline)
-							Text("2")
-							Text("H")
+							Text("LAB")
 							Text("18")
-							Image(systemName: "checkmark.seal")
+							Text("14")
+							Image(systemName: "checkmark")
 								.foregroundColor(.green)
+							Image(systemName: "xmark")
+								.foregroundColor(.red)
 					}
 				}
 			
-			HStack(alignment: .center, spacing: 32) {
+
+			HStack {
+				
+				PositionDotView()
 				
 				HStack(spacing: 16) {
-					VStack {
-						Text("Arrivo")
-						Text("12:24")
-							.font(.headline)
-							.foregroundColor(.secondary)
-					}
 					
-					VStack {
-						Text("Durata")
-						Text("13min")
-							.font(.headline)
+					HStack(spacing: 4) {
+						Text("2") +
+						Text("min")
+							.foregroundColor(.secondary)
+						Text("•")
+						Text("250") +
+						Text("m")
 							.foregroundColor(.secondary)
 					}
-				}
-				.frame(maxWidth: .infinity, alignment: .center)
-				
-				Button {
-					withAnimation(.easeInOut) {
-						locationManager.currentView = .navigation
-					}
-					locationManager.selectedDetent = .fraction(0.35)
+					.font(.headline)
+					
+					HStack(alignment: .center, spacing: 32) {
+						
+						Button {
+							withAnimation(.easeInOut) {
+								locationManager.currentView = .navigation
+							}
+							locationManager.selectedDetent = .fraction(0.35)
 
-				} label: {
-					HStack {
-						Image(systemName: "paperplane.fill")
-						Text("Naviga")
-					}
-					.font(.title2)
-					.fontWeight(.semibold)
-					.padding(8)
-					.padding(.horizontal, 8)
-				}
-				.controlSize(.mini)
-				.buttonStyle(.borderedProminent)
+						} label: {
+							HStack {
+								Image(systemName: "paperplane.fill")
+								Text("Naviga")
+							}
+							.font(.headline)
+							.foregroundColor(.white)
+							.padding(.horizontal, 24)
+							.padding(.vertical)
+						}
+						.buttonStyle(.borderedProminent)
+						.controlSize(.mini)
 
+					}
+
+				}
+				.padding(.leading, 24)
+				.background {
+					Capsule()
+						.foregroundColor(Color(uiColor: .secondarySystemBackground))
+				}
+			.frame(maxWidth: .infinity, alignment: .trailing)
 			}
 			
 		}

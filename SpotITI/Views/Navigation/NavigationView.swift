@@ -11,103 +11,69 @@ struct NavigationView: View {
 	
 	@EnvironmentObject var locationManager: LocationManager
 	
-    var body: some View {
-		VStack(spacing: 48) {
+	var body: some View {
+		VStack(spacing: 32) {
 			HStack {
-				Image(systemName: "arrow.uturn.down")
+				Image(systemName: "stairs")
 					.fontWeight(.bold)
-				Text("Cambia Direzione")
+				Text("Scendi le scale")
 			}
 			.font(.title)
 			.frame(maxWidth: .infinity, alignment: .center)
 			
-			HStack {
-				Grid {
-					GridRow {
-						Text("Piano")
-						Text("Blocco")
+			
+			HStack(spacing: 24) {
+				
+				VStack {
+					Text("10%")
+						.font(.subheadline)
+						.fontWeight(.semibold)
+					Text("completato")
+						.font(.caption2)
+						.foregroundColor(.secondary)
+				}
+				.font(.headline)
+				
+				HStack(alignment: .center, spacing: 32) {
+					
+					Button {
+						withAnimation(.easeInOut) {
+							locationManager.currentView = .home
+						}
+						locationManager.selectedDetent = .fraction(0.99)
+						
+					} label: {
+						HStack {
+							Image(systemName: "xmark")
+							Text("Termina")
+						}
+						.font(.headline)
+						.foregroundColor(.white)
+						.padding(.horizontal, 24)
+						.padding(.vertical)
 					}
-					.font(.caption)
-					.foregroundColor(.secondary)
-					GridRow {
-						Text("1")
-						Text("A")
-					}
-					.font(.title)
-					.fontWeight(.bold)
+					.buttonStyle(.borderedProminent)
+					.controlSize(.mini)
+					.tint(.red)
+					
 				}
 				
-				ZStack {
-					Circle()
-						.frame(width: 35, height: 35)
-						.foregroundColor(.white)
-						.shadow(color: .blue.opacity(0.2), radius: 5)
-					Circle()
-						.frame(width: 25, height: 25)
-						.foregroundColor(.blue)
-				}
-				Rectangle()
-					.frame(height: 6)
-					.foregroundColor(.gray.opacity(0.3))
-				ZStack {
-					Circle()
-						.frame(width: 35, height: 35)
-						.foregroundColor(.gray)
-					Circle()
-						.frame(width: 25, height: 25)
-						.foregroundColor(.white)
-				}
-				
-				Grid {
-					GridRow {
-						Text("Piano")
-						Text("Blocco")
-					}
-					.font(.caption)
-					.foregroundColor(.secondary)
-					GridRow {
-						Text("1")
-						Text("A")
-					}
-					.font(.title)
-					.fontWeight(.bold)
-				}
 			}
-			
-			HStack(spacing: 32) {
-				Button {
-					withAnimation(.easeInOut) {
-						locationManager.currentView = .home
-					}
-					locationManager.selectedDetent = .fraction(0.99)
-//					DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-//						locationManager.presentationDetents = [.fraction(0.99), .fraction(0.45)]
-//					}
-				} label: {
-					HStack {
-						Image(systemName: "xmark")
-						Text("Termina")
-					}
-					.font(.title3)
-					.fontWeight(.semibold)
-					.padding(8)
-					.padding(.horizontal, 8)
-				}
-				.tint(.red)
-				.controlSize(.mini)
-				.buttonStyle(.borderedProminent)
-
+			.padding(.leading, 32)
+			.background {
+				Capsule()
+					.foregroundColor(Color(uiColor: .secondarySystemBackground))
 			}
-			.frame(maxWidth: .infinity, alignment: .bottomTrailing)
-			
+			.frame(maxWidth: .infinity, alignment: .trailing)
 		}
 		.padding()
-    }
+	}
 }
 
 struct NavigationView_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationView()
+	static var previews: some View {
+		NavigationView()
 			.environmentObject(LocationManager())
-    }
+			.previewLayout(.sizeThatFits)
+	}
 }
