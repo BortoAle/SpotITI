@@ -15,7 +15,7 @@ class ScanditEAN8Scanner: NSObject, ObservableObject {
 
 	var dataCaptureContext: DataCaptureContext
 	var barcodeCapture: BarcodeCapture
-	var camera: Camera?
+	 var camera: Camera?
 	
 	@Published var ean8Code: String?
 

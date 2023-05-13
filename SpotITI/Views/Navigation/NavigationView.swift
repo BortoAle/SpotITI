@@ -22,49 +22,52 @@ struct NavigationView: View {
 			.frame(maxWidth: .infinity, alignment: .center)
 			
 			
-			HStack(spacing: 24) {
+			HStack {
 				
-				VStack {
-					Text("10%")
-						.font(.subheadline)
-						.fontWeight(.semibold)
-					Text("completato")
-						.font(.caption2)
-						.foregroundColor(.secondary)
-				}
-				.font(.headline)
+				PositionDotView()
 				
-				HStack(alignment: .center, spacing: 32) {
-					
-					Button {
-						withAnimation(.easeInOut) {
-							locationManager.currentView = .home
-						}
-						locationManager.selectedDetent = .fraction(0.99)
-						
-					} label: {
-						HStack {
-							Image(systemName: "xmark")
-							Text("Termina")
-						}
-						.font(.headline)
-						.foregroundColor(.white)
-						.padding(.horizontal, 24)
-						.padding(.vertical)
+				HStack(spacing: 24) {
+					VStack {
+						Text("10%")
+							.font(.subheadline)
+							.fontWeight(.semibold)
+						Text("completato")
+							.font(.caption2)
+							.foregroundColor(.secondary)
 					}
-					.buttonStyle(.borderedProminent)
-					.controlSize(.mini)
-					.tint(.red)
+					.font(.headline)
+					
+					HStack(alignment: .center, spacing: 32) {
+						
+						Button {
+							withAnimation(.easeInOut) {
+								locationManager.currentView = .home
+							}
+							locationManager.selectedDetent = .fraction(0.99)
+							
+						} label: {
+							HStack {
+								Image(systemName: "xmark")
+								Text("Termina")
+							}
+							.font(.headline)
+							.foregroundColor(.white)
+							.padding(8)
+						}
+						.buttonStyle(.borderedProminent)
+						.controlSize(.mini)
+						.tint(.red)
+						
+					}
 					
 				}
-				
+				.padding(.leading, 32)
+				.background {
+					Capsule()
+						.foregroundColor(Color(uiColor: .secondarySystemBackground))
+				}
+				.frame(maxWidth: .infinity, alignment: .trailing)
 			}
-			.padding(.leading, 32)
-			.background {
-				Capsule()
-					.foregroundColor(Color(uiColor: .secondarySystemBackground))
-			}
-			.frame(maxWidth: .infinity, alignment: .trailing)
 		}
 		.padding()
 	}

@@ -19,7 +19,7 @@ class LocationManager: NSObject, ObservableObject, AVCaptureMetadataOutputObject
 	@Published var currentView: ViewType = .home
 	
 	@Published var selectedDetent: PresentationDetent = .fraction(0.99)
-	@Published var presentationDetents: Set<PresentationDetent> = [.fraction(0.99), .fraction(0.45), .fraction(0.35)]
+	@Published var presentationDetents: Set<PresentationDetent> = [.fraction(0.99), .fraction(0.35), .fraction(0.2)]
 	
 	@Published var qrCodeValue: String = "" {
 		didSet {

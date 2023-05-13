@@ -90,13 +90,13 @@ struct NavigationPreviewView: View {
 					}
 					.font(.headline)
 					
-					HStack(alignment: .center, spacing: 32) {
+					HStack(alignment: .center, spacing: 16) {
 						
 						Button {
 							withAnimation(.easeInOut) {
 								locationManager.currentView = .navigation
 							}
-							locationManager.selectedDetent = .fraction(0.35)
+							locationManager.selectedDetent = .fraction(0.2)
 
 						} label: {
 							HStack {
@@ -105,8 +105,7 @@ struct NavigationPreviewView: View {
 							}
 							.font(.headline)
 							.foregroundColor(.white)
-							.padding(.horizontal, 24)
-							.padding(.vertical)
+							.padding(8)
 						}
 						.buttonStyle(.borderedProminent)
 						.controlSize(.mini)
