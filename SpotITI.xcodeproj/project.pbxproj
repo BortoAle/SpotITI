@@ -26,7 +26,7 @@
 		6AFD7B562A0FEC5600B52A9C /* ScanditEAN8Scanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AFD7B552A0FEC5600B52A9C /* ScanditEAN8Scanner.swift */; };
 		6AFD7B582A0FF1FE00B52A9C /* ScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AFD7B572A0FF1FE00B52A9C /* ScannerView.swift */; };
 		6AFD7B5B2A0FF9D400B52A9C /* confirm.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 6AFD7B592A0FF9CE00B52A9C /* confirm.m4a */; };
-		6AFD7B5D2A100FB300B52A9C /* Secrets.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6AFD7B5C2A100FB300B52A9C /* Secrets.plist */; };
+		6AFD7B612A1019FD00B52A9C /* Secrets.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6AFD7B602A1019FD00B52A9C /* Secrets.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,7 +48,7 @@
 		6AFD7B552A0FEC5600B52A9C /* ScanditEAN8Scanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanditEAN8Scanner.swift; sourceTree = "<group>"; };
 		6AFD7B572A0FF1FE00B52A9C /* ScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerView.swift; sourceTree = "<group>"; };
 		6AFD7B592A0FF9CE00B52A9C /* confirm.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = confirm.m4a; sourceTree = "<group>"; };
-		6AFD7B5C2A100FB300B52A9C /* Secrets.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Secrets.plist; sourceTree = "<group>"; };
+		6AFD7B602A1019FD00B52A9C /* Secrets.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Secrets.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,8 +67,8 @@
 		6A2A1C3129C2330200FC359F = {
 			isa = PBXGroup;
 			children = (
+				6AFD7B602A1019FD00B52A9C /* Secrets.plist */,
 				6A2A1C3C29C2330200FC359F /* SpotITI */,
-				6AFD7B592A0FF9CE00B52A9C /* confirm.m4a */,
 				6A2A1C3B29C2330200FC359F /* Products */,
 			);
 			sourceTree = "<group>";
@@ -89,12 +89,8 @@
 				6A9ED46429FD4F6500C34722 /* Model */,
 				6A805F2F2A0D491B00CAC807 /* Views */,
 				6A2A1C4129C2330300FC359F /* Assets.xcassets */,
+				6AFD7B592A0FF9CE00B52A9C /* confirm.m4a */,
 				6A2A1C4329C2330300FC359F /* Preview Content */,
-				6A4151C429FD00BB001DF926 /* LocationManager.swift */,
-				6AFD7B492A0F8DC800B52A9C /* PositionDotView.swift */,
-				6AFD7B552A0FEC5600B52A9C /* ScanditEAN8Scanner.swift */,
-				6AFD7B572A0FF1FE00B52A9C /* ScannerView.swift */,
-				6AFD7B5C2A100FB300B52A9C /* Secrets.plist */,
 			);
 			path = SpotITI;
 			sourceTree = "<group>";
@@ -131,6 +127,10 @@
 			isa = PBXGroup;
 			children = (
 				6A805F342A0D499300CAC807 /* NavigationView.swift */,
+				6A4151C429FD00BB001DF926 /* LocationManager.swift */,
+				6AFD7B492A0F8DC800B52A9C /* PositionDotView.swift */,
+				6AFD7B552A0FEC5600B52A9C /* ScanditEAN8Scanner.swift */,
+				6AFD7B572A0FF1FE00B52A9C /* ScannerView.swift */,
 			);
 			path = Navigation;
 			sourceTree = "<group>";
@@ -218,7 +218,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6AFD7B5D2A100FB300B52A9C /* Secrets.plist in Resources */,
+				6AFD7B612A1019FD00B52A9C /* Secrets.plist in Resources */,
 				6A2A1C4529C2330300FC359F /* Preview Assets.xcassets in Resources */,
 				6A2A1C4229C2330300FC359F /* Assets.xcassets in Resources */,
 				6AFD7B5B2A0FF9D400B52A9C /* confirm.m4a in Resources */,
@@ -387,14 +387,14 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 0.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.scandit.Scandit.SdkSamples.SimpleSampleUniversal;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.bortoluzzi.spotiti;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -419,14 +419,14 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 0.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.scandit.Scandit.SdkSamples.SimpleSampleUniversal;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.bortoluzzi.spotiti;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

@@ -18,12 +18,11 @@ struct ClassroomListView: View {
 			VStack(alignment: .leading) {
 				Text("Utilità")
 					.font(.headline)
-				ScrollView(.horizontal, showsIndicators: false) {
-					HStack {
-						ForEach(0..<10) { _ in
-							UtilityCard(name: "👑Presidenza")
-						}
-					}
+				LazyVGrid(columns: [GridItem(.adaptive(minimum: 130))]) {
+					UtilityCard(name: "Servizi Donne", emoji: "🚾")
+					UtilityCard(name: "Servizi Uomini", emoji: "🚾")
+					UtilityCard(name: "Presidenza", emoji: "👑")
+					UtilityCard(name: "Aula Magna", emoji: "🪑")
 				}
 				
 				Text("Aule")
@@ -31,7 +30,7 @@ struct ClassroomListView: View {
 				Text("A")
 					.font(.subheadline)
 					.foregroundColor(.secondary)
-				LazyVGrid(columns: [GridItem(.adaptive(minimum: 80))]) {
+				LazyVGrid(columns: [GridItem(.adaptive(minimum: 90), spacing: 8)], spacing: 8) {
 					ForEach(0..<11) { _ in
 						ClassroomCard(name: "AB")
 							.onTapGesture {
