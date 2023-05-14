@@ -20,7 +20,8 @@ struct UtilityCard: View {
 				.fontWeight(.medium)
 		}
 		.padding()
-		.frame(maxWidth: .infinity, alignment: .leading)
+		.fixedSize(horizontal: false, vertical: true)
+		.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
 		.background {
 			RoundedRectangle(cornerRadius: 8)
 				.foregroundColor(Color(uiColor: .secondarySystemBackground))

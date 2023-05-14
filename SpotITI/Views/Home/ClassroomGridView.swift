@@ -62,7 +62,7 @@ extension ClassroomGridView {
 		VStack(alignment: .leading) {
 			Text("Utilità")
 				.font(.headline)
-			LazyVGrid(columns: [GridItem(.adaptive(minimum: 130))]) {
+			LazyVGrid(columns: [GridItem(.adaptive(minimum: 150))]) {
 				UtilityCard(name: "Servizi Donne", emoji: "🚾")
 				UtilityCard(name: "Servizi Uomini", emoji: "🚾")
 				UtilityCard(name: "Presidenza", emoji: "👑")

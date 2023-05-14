@@ -41,28 +41,23 @@ class NavigationManager: NSObject, ObservableObject, AVCaptureMetadataOutputObje
 	}
 	
 	func setCurrentView(view: ViewType) {
+		let viewToDetents: [ViewType: PresentationDetent] = [
+			.home: .fraction(0.99),
+			.detail: .fraction(0.35),
+			.navigation: .fraction(0.2)
+		]
+		
+		guard let detent = viewToDetents[view] else { return }
 		
 		presentationDetents = [.fraction(0.99), .fraction(0.35), .fraction(0.2)]
 		currentView = view
+		selectedDetent = detent
 		
-		switch view {
-			case .home:
-				selectedDetent = .fraction(0.99)
-				DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-					self.presentationDetents = [.fraction(0.99)]
-				}
-			case .detail:
-				selectedDetent = .fraction(0.35)
-				DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-					self.presentationDetents = [.fraction(0.35)]
-				}
-			case .navigation:
-				selectedDetent = .fraction(0.2)
-				DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-					self.presentationDetents = [.fraction(0.2)]
-				}
+		DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+			self.presentationDetents = [detent]
 		}
 	}
+
 	
 	override init() {
 		
