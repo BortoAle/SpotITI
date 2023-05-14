@@ -40,9 +40,6 @@ struct ClassroomGridView: View {
 						}
 					}
 				}
-				.onChange(of: scanManager.ean8Code) { _ in
-					playSoundAndHapticFeedback()
-				}
 		}
 	}
 	
@@ -92,24 +89,6 @@ extension ClassroomGridView {
 						}
 				}
 			}
-		}
-	}
-}
-
-// MARK: - Functions
-
-extension ClassroomGridView {
-	// Play sound and haptic feedback when EAN8 code changes
-	func playSoundAndHapticFeedback() {
-		if debugActive {
-			if let soundURL = Bundle.main.url(forResource: "beep", withExtension: "m4a") {
-				var soundID: SystemSoundID = 0
-				AudioServicesCreateSystemSoundID(soundURL as CFURL, &soundID)
-				AudioServicesPlaySystemSound(soundID)
-			}
-			
-			let generator = UIImpactFeedbackGenerator(style: .heavy)
-			generator.impactOccurred()
 		}
 	}
 }

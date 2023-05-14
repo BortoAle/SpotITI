@@ -25,18 +25,3 @@ struct ScannerView: UIViewRepresentable {
 
 	func updateUIView(_ uiView: ScanditCaptureCore.DataCaptureView, context: Context) {}
 }
-
-struct ScannerCameraView: View {
-	
-	@StateObject var scanner = ScanManager()
-
-	var body: some View {
-		VStack {
-			ScannerView(scanner: scanner)
-				.aspectRatio(3/4, contentMode: .fit)
-			Text(scanner.ean8Code ?? "No code scanned yet")
-				.font(.title)
-				.padding()
-		}
-	}
-}

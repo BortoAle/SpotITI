@@ -64,5 +64,9 @@ extension ScanManager: BarcodeCaptureListener {
 				self.ean8Code = barcode.data
 			}
 		}
+		barcodeCapture.isEnabled = false
+		DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+			barcodeCapture.isEnabled = true
+		}
 	}
 }
