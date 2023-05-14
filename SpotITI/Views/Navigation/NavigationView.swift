@@ -74,6 +74,7 @@ struct NavigationView: View {
 	var terminateButton: some View {
 		Button {
 			navigationManager.setCurrentView(view: .home)
+			navigationManager.stopNavigation()
 		} label: {
 			HStack {
 				Image(systemName: "xmark")

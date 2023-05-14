@@ -84,7 +84,7 @@ extension ClassroomGridView {
 			Text("A")
 				.font(.subheadline)
 				.foregroundColor(.secondary)
-			LazyVGrid(columns: [GridItem(.adaptive(minimum: 90), spacing: 8)], spacing: 8) {
+			LazyVGrid(columns: [GridItem(.adaptive(minimum: 80), spacing: 8)], spacing: 8) {
 				ForEach(0..<11) { _ in
 					ClassroomCard(name: "AB")
 						.onTapGesture {
@@ -120,5 +120,6 @@ struct ClassroomGridView_Previews: PreviewProvider {
 	static var previews: some View {
 		ClassroomGridView()
 			.environmentObject(NavigationManager())
+			.environmentObject(ScanManager())
 	}
 }

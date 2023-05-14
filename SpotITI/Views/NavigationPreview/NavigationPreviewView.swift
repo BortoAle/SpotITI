@@ -97,8 +97,9 @@ extension NavigationPreviewView {
 				Capsule()
 					.foregroundColor(Color(uiColor: .secondarySystemBackground))
 			}
+			.frame(maxWidth: .infinity, alignment: .trailing)
 		}
-		.frame(maxWidth: .infinity, alignment: .trailing)
+		
 	}
 	
 	// Navigation info
@@ -119,6 +120,7 @@ extension NavigationPreviewView {
 	var navigationButton: some View {
 		Button {
 			navigationManager.setCurrentView(view: .navigation)
+			navigationManager.startNavigation()
 		} label: {
 			HStack {
 				Image(systemName: "paperplane.fill")

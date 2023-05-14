@@ -24,7 +24,7 @@ struct CompassView: View {
 			Image(systemName: "arrow.up")
 				.resizable()
 				.scaledToFit()
-				.frame(height: 200)
+				.frame(height: 190)
 				.fontWeight(.black)
 				.foregroundColor(Color(uiColor: .secondarySystemBackground))
 				.rotationEffect(.degrees(-navigationManager.heading))

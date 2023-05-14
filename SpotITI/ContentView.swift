@@ -21,14 +21,16 @@ struct ContentView: View {
 	var body: some View {
 		ZStack {
 			scannerView
-			compassView
+			if navigationManager.isNavigating {
+				compassView
+			}
 		}
 		.sheet(isPresented: .constant(true)) {
 			mainContentView
 				.presentationDetents(navigationManager.presentationDetents, selection: $navigationManager.selectedDetent)
 				.presentationBackgroundInteraction(.enabled)
 				.interactiveDismissDisabled(true)
-				.presentationCornerRadius(30)
+				.presentationCornerRadius(25)
 				.presentationDragIndicator(.hidden)
 		}
 		.onAppear {
@@ -37,6 +39,7 @@ struct ContentView: View {
 		.task {
 			navigationManager.maps = await apiManager.fetchMaps()
 		}
+		.animation(.easeInOut, value: navigationManager.isNavigating)
 	}
 }
 

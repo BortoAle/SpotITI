@@ -18,6 +18,7 @@ class NavigationManager: NSObject, ObservableObject, AVCaptureMetadataOutputObje
 	@Published var selectedMap: Map? = nil
 	@Published var canReachServer: Bool = true
 	@Published var currentView: ViewType = .home
+	@Published var isNavigating: Bool = false
 	
 	@Published var selectedDetent: PresentationDetent = .fraction(0.99)
 	@Published var presentationDetents: Set<PresentationDetent> = []
@@ -29,6 +30,15 @@ class NavigationManager: NSObject, ObservableObject, AVCaptureMetadataOutputObje
 	private let filterConstant: Double = 0.1
 	private var locationManager: CLLocationManager
 	private var motionManager: CMMotionManager
+	
+	func startNavigation() {
+		isNavigating = true
+		playSoundAndHapticFeedback()
+	}
+	
+	func stopNavigation() {
+		isNavigating = false
+	}
 	
 	func setCurrentView(view: ViewType) {
 		
@@ -113,6 +123,26 @@ class NavigationManager: NSObject, ObservableObject, AVCaptureMetadataOutputObje
 		DispatchQueue.main.async {
 			self.heading = newHeading.trueHeading
 		}
+	}
+	
+	func playSoundAndHapticFeedback() {
+			if let soundURL = Bundle.main.url(forResource: "confirm", withExtension: "m4a") {
+				var soundID: SystemSoundID = 0
+				AudioServicesCreateSystemSoundID(soundURL as CFURL, &soundID)
+				AudioServicesPlaySystemSound(soundID)
+			}
+			
+		let generator = UIImpactFeedbackGenerator(style: .heavy)
+		
+		DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+			for i in 0..<4 {
+				DispatchQueue.main.asyncAfter(deadline: .now() + (0.2 * Double(i))) {
+					generator.impactOccurred()
+				}
+			}
+		}
+
+		
 	}
 	
 }

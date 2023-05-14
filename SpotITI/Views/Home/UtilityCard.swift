@@ -22,7 +22,7 @@ struct UtilityCard: View {
 		.padding()
 		.frame(maxWidth: .infinity, alignment: .leading)
 		.background {
-			RoundedRectangle(cornerRadius: 6)
+			RoundedRectangle(cornerRadius: 8)
 				.foregroundColor(Color(uiColor: .secondarySystemBackground))
 		}
 	}
