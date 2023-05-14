@@ -20,7 +20,7 @@ class NavigationManager: NSObject, ObservableObject, AVCaptureMetadataOutputObje
 	@Published var currentView: ViewType = .home
 	
 	@Published var selectedDetent: PresentationDetent = .fraction(0.99)
-	@Published var presentationDetents: Set<PresentationDetent> = [.fraction(0.99), .fraction(0.35), .fraction(0.2)]
+	@Published var presentationDetents: Set<PresentationDetent> = []
 	
 	// CompassViewModel properties
 	@Published var heading: Double = 0
@@ -30,12 +30,38 @@ class NavigationManager: NSObject, ObservableObject, AVCaptureMetadataOutputObje
 	private var locationManager: CLLocationManager
 	private var motionManager: CMMotionManager
 	
+	func setCurrentView(view: ViewType) {
+		
+		presentationDetents = [.fraction(0.99), .fraction(0.35), .fraction(0.2)]
+		currentView = view
+		
+		switch view {
+			case .home:
+				selectedDetent = .fraction(0.99)
+				DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+					self.presentationDetents = [.fraction(0.99)]
+				}
+			case .detail:
+				selectedDetent = .fraction(0.35)
+				DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+					self.presentationDetents = [.fraction(0.35)]
+				}
+			case .navigation:
+				selectedDetent = .fraction(0.2)
+				DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+					self.presentationDetents = [.fraction(0.2)]
+				}
+		}
+	}
+	
 	override init() {
-
+		
 		// CompassViewModel setup
 		locationManager = CLLocationManager()
 		motionManager = CMMotionManager()
 		super.init()
+		
+		setCurrentView(view: .home)
 		
 		// CLLocationManager setup
 		locationManager.delegate = self

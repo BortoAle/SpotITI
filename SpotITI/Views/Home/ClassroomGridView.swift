@@ -6,22 +6,55 @@
 //
 
 import SwiftUI
+import AVFoundation
 
 // MARK: - ClassroomGridView
 
 struct ClassroomGridView: View {
 	
-	@EnvironmentObject private var locationManager: NavigationManager
+	@EnvironmentObject private var navigationManager: NavigationManager
+	@EnvironmentObject private var scanManager: ScanManager
+
+	
+	@State private var debugActive: Bool = false
 
 	var body: some View {
-		ScrollView {
-			VStack(alignment: .leading) {
-				utilitySection
-				classroomsSection
+		NavigationStack {
+			ScrollView {
+				VStack(alignment: .leading) {
+					utilitySection
+					classroomsSection
+				}
+				.padding()
 			}
-			.padding()
+				.navigationTitle("Aule")
+				.navigationBarTitleDisplayMode(.inline)
+				.searchable(text: .constant(""))
+				.toolbar {
+					ToolbarItem(placement: .navigationBarTrailing) {
+						HStack {
+							if debugActive {
+								Text(scanManager.ean8Code ?? "N/A")
+							}
+							debugToolbarContent
+						}
+					}
+				}
+				.onChange(of: scanManager.ean8Code) { _ in
+					playSoundAndHapticFeedback()
+				}
 		}
 	}
+	
+	// Toolbar content for the debug mode
+	var debugToolbarContent: some View {
+		Button {
+			debugActive.toggle()
+		} label: {
+			Image(systemName: "ladybug")
+		}
+	}
+	
 }
 
 // MARK: - Subviews
@@ -36,7 +69,9 @@ extension ClassroomGridView {
 				UtilityCard(name: "Servizi Donne", emoji: "🚾")
 				UtilityCard(name: "Servizi Uomini", emoji: "🚾")
 				UtilityCard(name: "Presidenza", emoji: "👑")
+				UtilityCard(name: "Ufficio Tecnico", emoji: "🛠️")
 				UtilityCard(name: "Aula Magna", emoji: "🪑")
+				UtilityCard(name: "Bidelleria", emoji: "🧹")
 			}
 		}
 	}
@@ -53,13 +88,28 @@ extension ClassroomGridView {
 				ForEach(0..<11) { _ in
 					ClassroomCard(name: "AB")
 						.onTapGesture {
-							withAnimation(.easeInOut) {
-								locationManager.currentView = .detail
-							}
-							locationManager.selectedDetent = .fraction(0.35)
+							navigationManager.setCurrentView(view: .detail)
 						}
 				}
 			}
+		}
+	}
+}
+
+// MARK: - Functions
+
+extension ClassroomGridView {
+	// Play sound and haptic feedback when EAN8 code changes
+	func playSoundAndHapticFeedback() {
+		if debugActive {
+			if let soundURL = Bundle.main.url(forResource: "beep", withExtension: "m4a") {
+				var soundID: SystemSoundID = 0
+				AudioServicesCreateSystemSoundID(soundURL as CFURL, &soundID)
+				AudioServicesPlaySystemSound(soundID)
+			}
+			
+			let generator = UIImpactFeedbackGenerator(style: .heavy)
+			generator.impactOccurred()
 		}
 	}
 }

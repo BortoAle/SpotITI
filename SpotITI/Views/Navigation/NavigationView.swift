@@ -73,10 +73,7 @@ struct NavigationView: View {
 
 	var terminateButton: some View {
 		Button {
-			withAnimation(.easeInOut) {
-				navigationManager.currentView = .home
-			}
-			navigationManager.selectedDetent = .fraction(0.99)
+			navigationManager.setCurrentView(view: .home)
 		} label: {
 			HStack {
 				Image(systemName: "xmark")

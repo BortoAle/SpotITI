@@ -13,7 +13,7 @@ struct UtilityCard: View {
 	let emoji: String
 	
 	var body: some View {
-		VStack(alignment: .leading, spacing: 4) {
+		HStack(alignment: .center, spacing: 4) {
 			Text(emoji)
 			Text(name)
 				.font(.headline)

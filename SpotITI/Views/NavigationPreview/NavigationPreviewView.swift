@@ -36,8 +36,7 @@ extension NavigationPreviewView {
 				.fontWeight(.semibold)
 			Spacer()
 			Button {
-				navigationManager.currentView = .home
-				navigationManager.selectedDetent = .fraction(0.99)
+				navigationManager.setCurrentView(view: .home)
 			} label: {
 				Image(systemName: "xmark")
 					.padding(8)
@@ -119,10 +118,7 @@ extension NavigationPreviewView {
 	// Navigation button
 	var navigationButton: some View {
 		Button {
-			withAnimation(.easeInOut) {
-				navigationManager.currentView = .navigation
-			}
-			navigationManager.selectedDetent = .fraction(0.2)
+			navigationManager.setCurrentView(view: .navigation)
 		} label: {
 			HStack {
 				Image(systemName: "paperplane.fill")
