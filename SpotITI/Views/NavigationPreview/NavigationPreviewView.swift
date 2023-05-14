@@ -12,7 +12,8 @@ import SwiftUI
 // MARK: - NavigationPreviewView
 
 struct NavigationPreviewView: View {
-	@EnvironmentObject var navigationManager: NavigationManager
+	
+	@EnvironmentObject private var navigationManager: NavigationManager
 
 	var body: some View {
 		VStack(spacing: 32) {

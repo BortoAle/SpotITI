@@ -11,11 +11,12 @@ import AVFoundation
 // MARK: - ContentView
 
 struct ContentView: View {
-	@EnvironmentObject var navigationManager: NavigationManager
+	@EnvironmentObject private var navigationManager: NavigationManager
 	@EnvironmentObject var scanManager: ScanManager
-
-	@State var showCurrentPosition: Bool = true
-	@State var debugActive: Bool = false
+	let apiManager = APIManager()
+	
+	@State private var showCurrentPosition: Bool = true
+	@State private var debugActive: Bool = false
 	
 	// Body of the ContentView
 	var body: some View {
@@ -33,7 +34,7 @@ struct ContentView: View {
 			playSoundAndHapticFeedback()
 		}
 		.task {
-			navigationManager.maps = await navigationManager.fetchMaps()
+			navigationManager.maps = await apiManager.fetchMaps()
 		}
 	}
 }
@@ -97,7 +98,7 @@ extension ContentView {
 		Button {
 			debugActive.toggle()
 		} label: {
-			Image(systemName: "info.circle")
+			Image(systemName: "ladybug")
 		}
 	}
 }

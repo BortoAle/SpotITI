@@ -23,59 +23,58 @@ class NavigationManager: NSObject, ObservableObject, AVCaptureMetadataOutputObje
 	@Published var presentationDetents: Set<PresentationDetent> = [.fraction(0.99), .fraction(0.35), .fraction(0.2)]
 	
 	// CompassViewModel properties
-	   @Published var heading: Double = 0
-	   @Published var rotation3D: (x: CGFloat, y: CGFloat, z: CGFloat) = (0, 0, 0)
-	   private var filteredAcceleration: (x: Double, y: Double) = (0, 0)
-	   private let filterConstant: Double = 0.1
-	   private var locationManager: CLLocationManager
-	   private var motionManager: CMMotionManager
+	@Published var heading: Double = 0
+	@Published var rotation3D: (x: CGFloat, y: CGFloat, z: CGFloat) = (0, 0, 0)
+	private var filteredAcceleration: (x: Double, y: Double) = (0, 0)
+	private let filterConstant: Double = 0.1
+	private var locationManager: CLLocationManager
+	private var motionManager: CMMotionManager
 	
 	override init() {
+
+		// CompassViewModel setup
+		locationManager = CLLocationManager()
+		motionManager = CMMotionManager()
+		super.init()
 		
-			// CompassViewModel setup
-			locationManager = CLLocationManager()
-			motionManager = CMMotionManager()
-			super.init()
-
-			// CLLocationManager setup
-			locationManager.delegate = self
-			locationManager.desiredAccuracy = kCLLocationAccuracyBest
-			locationManager.startUpdatingHeading()
-
-			if motionManager.isAccelerometerAvailable {
-				motionManager.accelerometerUpdateInterval = 1 / 60
-				motionManager.startAccelerometerUpdates(to: OperationQueue.main) { [weak self] (data, error) in
-					guard let self = self, let data = data else { return }
-
-					// Apply low-pass filter to the accelerometer data
-					let filteredX = data.acceleration.x * self.filterConstant + self.filteredAcceleration.x * (1 - self.filterConstant)
-					let filteredY = data.acceleration.y * self.filterConstant + self.filteredAcceleration.y * (1 - self.filterConstant)
-					self.filteredAcceleration = (x: filteredX, y: filteredY)
-
-					let rotationX = -CGFloat(filteredY) * 90
-					let rotationY = CGFloat(filteredX) * 90
-
-					// Clamping the rotation values
-					let clampedRotationX = min(max(rotationX, -70), 70)
-					let clampedRotationY = min(max(rotationY, -70), 70)
-
-					self.rotation3D.x = clampedRotationX
-					self.rotation3D.y = clampedRotationY
-				}
+		// CLLocationManager setup
+		locationManager.delegate = self
+		locationManager.desiredAccuracy = kCLLocationAccuracyBest
+		locationManager.startUpdatingHeading()
+		
+		if motionManager.isAccelerometerAvailable {
+			motionManager.accelerometerUpdateInterval = 1 / 60
+			motionManager.startAccelerometerUpdates(to: OperationQueue.main) { [weak self] (data, error) in
+				guard let self = self, let data = data else { return }
+				
+				// Apply low-pass filter to the accelerometer data
+				let filteredX = data.acceleration.x * self.filterConstant + self.filteredAcceleration.x * (1 - self.filterConstant)
+				let filteredY = data.acceleration.y * self.filterConstant + self.filteredAcceleration.y * (1 - self.filterConstant)
+				self.filteredAcceleration = (x: filteredX, y: filteredY)
+				
+				let rotationX = -CGFloat(filteredY) * 90
+				let rotationY = CGFloat(filteredX) * 90
+				
+				// Clamping the rotation values
+				let clampedRotationX = min(max(rotationX, -70), 70)
+				let clampedRotationY = min(max(rotationY, -70), 70)
+				
+				self.rotation3D.x = clampedRotationX
+				self.rotation3D.y = clampedRotationY
 			}
 		}
-
+	}
 	
-//	func updateCurrentVertex() {
-//		if let selectedMap = maps.first {
-//			withAnimation(.easeInOut) {
-//				currentVertex = selectedMap.vertices.first(where: {
-//					$0.id.codingKey.stringValue == qrCodeValue
-//				})!
+//		func updateCurrentVertex() {
+//			if let selectedMap = maps.first {
+//				withAnimation(.easeInOut) {
+//					currentVertex = selectedMap.vertices.first(where: {
+//						$0.id.codingKey.stringValue == qrCodeValue
+//					})!
+//				}
 //			}
 //		}
-//	}
-	
+//	
 	func directionBetweenPoints(current: CGPoint, next: CGPoint) -> Double {
 		let deltaX = next.x - current.x
 		let deltaY = next.y - current.y
@@ -83,27 +82,11 @@ class NavigationManager: NSObject, ObservableObject, AVCaptureMetadataOutputObje
 		let angleInDegrees = angleInRadians * 180 / .pi
 		return angleInDegrees
 	}
-
+	
 	func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
 		DispatchQueue.main.async {
 			self.heading = newHeading.trueHeading
 		}
 	}
 	
-}
-
-//MARK: API
-extension NavigationManager {
-	func fetchMaps() async -> [Map] {
-		let url = URL(string: "http://192.168.1.2:3000/maps")!
-		do {
-			let (data, _) = try await URLSession.shared.data(from: url)
-			let decodedData = try JSONDecoder().decode([Map].self, from: data)
-			return decodedData
-		} catch {
-			canReachServer = false
-			print(error.localizedDescription)
-		}
-		return []
-	}
 }

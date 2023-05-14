@@ -10,7 +10,8 @@ import SwiftUI
 // MARK: - ClassroomGridView
 
 struct ClassroomGridView: View {
-	@EnvironmentObject var locationManager: NavigationManager
+	
+	@EnvironmentObject private var locationManager: NavigationManager
 
 	var body: some View {
 		ScrollView {

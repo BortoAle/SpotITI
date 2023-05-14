@@ -10,66 +10,85 @@ import SwiftUI
 struct NavigationView: View {
 	
 	@EnvironmentObject var navigationManager: NavigationManager
-	
+
+	private let buttonColor: Color = .red
+	private let capsuleColor: Color = Color(uiColor: .secondarySystemBackground)
+	private let paddingSize: CGFloat = 8
+
 	var body: some View {
 		VStack(spacing: 32) {
-			HStack {
-				Image(systemName: "stairs")
-					.fontWeight(.bold)
-				Text("Scendi le scale")
-			}
-			.font(.title)
-			.frame(maxWidth: .infinity, alignment: .center)
-			
-			
-			HStack {
-				
-				PositionDotView()
-				
-				HStack(spacing: 24) {
-					VStack {
-						Text("10%")
-							.font(.subheadline)
-							.fontWeight(.semibold)
-						Text("completato")
-							.font(.caption2)
-							.foregroundColor(.secondary)
-					}
-					.font(.headline)
-					
-					HStack(alignment: .center, spacing: 32) {
-						
-						Button {
-							withAnimation(.easeInOut) {
-								navigationManager.currentView = .home
-							}
-							navigationManager.selectedDetent = .fraction(0.99)
-							
-						} label: {
-							HStack {
-								Image(systemName: "xmark")
-								Text("Termina")
-							}
-							.font(.headline)
-							.foregroundColor(.white)
-							.padding(8)
-						}
-						.buttonStyle(.borderedProminent)
-						.controlSize(.mini)
-						.tint(.red)
-						
-					}
-					
-				}
-				.padding(.leading, 32)
-				.background {
-					Capsule()
-						.foregroundColor(Color(uiColor: .secondarySystemBackground))
-				}
-				.frame(maxWidth: .infinity, alignment: .trailing)
-			}
+			directionView
+			progressView
 		}
 		.padding()
+	}
+
+	var directionView: some View {
+		HStack {
+			Image(systemName: "stairs")
+				.fontWeight(.bold)
+			Text("Scendi le scale")
+		}
+		.font(.title)
+		.frame(maxWidth: .infinity, alignment: .center)
+	}
+
+	var progressView: some View {
+		HStack {
+			PositionDotView()
+			progressDetailsView
+		}
+	}
+
+	var progressDetailsView: some View {
+		HStack(spacing: 24) {
+			progressStatsView
+			controlsView
+		}
+		.padding(.leading, 32)
+		.background {
+			Capsule()
+				.foregroundColor(capsuleColor)
+		}
+		.frame(maxWidth: .infinity, alignment: .trailing)
+	}
+
+	var progressStatsView: some View {
+		VStack {
+			Text("10%")
+				.font(.subheadline)
+				.fontWeight(.semibold)
+			Text("completato")
+				.font(.caption2)
+				.foregroundColor(.secondary)
+		}
+		.font(.headline)
+	}
+
+	var controlsView: some View {
+		HStack(alignment: .center, spacing: 32) {
+			terminateButton
+		}
+	}
+
+	var terminateButton: some View {
+		Button {
+			withAnimation(.easeInOut) {
+				navigationManager.currentView = .home
+			}
+			navigationManager.selectedDetent = .fraction(0.99)
+		} label: {
+			HStack {
+				Image(systemName: "xmark")
+				Text("Termina")
+			}
+			.font(.headline)
+			.foregroundColor(.white)
+			.padding(paddingSize)
+		}
+		.buttonStyle(.borderedProminent)
+		.controlSize(.mini)
+		.tint(buttonColor)
 	}
 }
 

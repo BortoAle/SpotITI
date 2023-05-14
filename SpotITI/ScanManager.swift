@@ -10,9 +10,9 @@ import ScanditCaptureCore
 
 class ScanManager: NSObject, ObservableObject {
 
-	var dataCaptureContext: DataCaptureContext
-	var barcodeCapture: BarcodeCapture
-	 var camera: Camera?
+	let dataCaptureContext: DataCaptureContext
+	let barcodeCapture: BarcodeCapture
+	let camera: Camera?
 	
 	@Published var ean8Code: String?
 
@@ -26,12 +26,12 @@ class ScanManager: NSObject, ObservableObject {
 
 		dataCaptureContext = DataCaptureContext(licenseKey: apiKey)
 		
-		// Configura le impostazioni di scansione
+		// Configure Scan Options
 		let settings = BarcodeCaptureSettings()
 		settings.set(symbology: .ean8, enabled: true)
 		barcodeCapture = BarcodeCapture(context: dataCaptureContext, settings: settings)
 		
-		// Configura la fotocamera
+		// Configure Camera
 		let cameraSettings = BarcodeCapture.recommendedCameraSettings
 		camera = Camera.default
 		camera?.apply(cameraSettings)
@@ -40,17 +40,17 @@ class ScanManager: NSObject, ObservableObject {
 		
 		super.init()
 		
-		// Aggiungi questo oggetto come listener
+		// Add object listener
 		barcodeCapture.addListener(self)
 		
-		// Crea la vista di acquisizione dati
+		// Create data capture view
 		let captureView = DataCaptureView(context: dataCaptureContext, frame: .zero)
 		
-		// Crea e aggiungi l'overlay
+		// Add the scan overlay
 		let overlay = BarcodeCaptureOverlay(barcodeCapture: barcodeCapture)
 		captureView.addOverlay(overlay)
 		
-		// Inizia la scansione
+		// Scart scanning
 		barcodeCapture.isEnabled = true
 	}
 }

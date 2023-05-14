@@ -10,8 +10,8 @@ import SwiftUI
 @main
 struct SpotITIApp: App {
 	
-	@StateObject var navigationManager = NavigationManager()
-	@StateObject var scanManager = ScanManager()
+	@StateObject private var navigationManager = NavigationManager()
+	@StateObject private var scanManager = ScanManager()
 	
 	var body: some Scene {
 		WindowGroup {

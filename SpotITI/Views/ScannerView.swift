@@ -23,9 +23,7 @@ struct ScannerView: UIViewRepresentable {
 		return captureView
 	}
 
-	func updateUIView(_ uiView: ScanditCaptureCore.DataCaptureView, context: Context) {
-		
-	}
+	func updateUIView(_ uiView: ScanditCaptureCore.DataCaptureView, context: Context) {}
 }
 
 struct ScannerCameraView: View {
