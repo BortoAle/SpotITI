@@ -118,6 +118,7 @@
 			isa = PBXGroup;
 			children = (
 				6AFD7B572A0FF1FE00B52A9C /* ScannerView.swift */,
+				6AB4149529FACA26002F8387 /* CompassView.swift */,
 				6AFD7B492A0F8DC800B52A9C /* PositionDotView.swift */,
 				6AF3342929C3B0A600C97CB0 /* Home */,
 				6A805F302A0D492F00CAC807 /* NavigationPreview */,
@@ -138,7 +139,6 @@
 			isa = PBXGroup;
 			children = (
 				6A805F342A0D499300CAC807 /* NavigationView.swift */,
-				6AB4149529FACA26002F8387 /* CompassView.swift */,
 			);
 			path = Navigation;
 			sourceTree = "<group>";
