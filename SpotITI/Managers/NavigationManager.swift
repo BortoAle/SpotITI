@@ -10,6 +10,7 @@ import SwiftUI
 import ScanditBarcodeCapture
 import CoreMotion
 import CoreLocation
+import Combine
 
 class NavigationManager: NSObject, ObservableObject, AVCaptureMetadataOutputObjectsDelegate, CLLocationManagerDelegate {
 	
@@ -30,6 +31,19 @@ class NavigationManager: NSObject, ObservableObject, AVCaptureMetadataOutputObje
 	private let filterConstant: Double = 0.1
 	private var locationManager: CLLocationManager
 	private var motionManager: CMMotionManager
+	
+	var cancellable : AnyCancellable?
+		
+		func connect(_ publisher: AnyPublisher<String?,Never>) {
+			cancellable = publisher.sink(receiveValue: { (newString) in
+				self.barcodeValue = newString
+			})
+		}
+	@Published var barcodeValue: String? {
+		didSet {
+			currentVertex = selectedMap?.vertices.first(where: { $0.id.codingKey.stringValue == barcodeValue })
+		}
+	}
 	
 	func startNavigation() {
 		isNavigating = true
@@ -130,7 +144,7 @@ class NavigationManager: NSObject, ObservableObject, AVCaptureMetadataOutputObje
 		let generator = UIImpactFeedbackGenerator(style: .heavy)
 		
 		DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-			for i in 0..<4 {
+			for i in 0..<3 {
 				DispatchQueue.main.asyncAfter(deadline: .now() + (0.2 * Double(i))) {
 					generator.impactOccurred()
 				}

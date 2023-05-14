@@ -35,10 +35,13 @@ struct ContentView: View {
 				.presentationDragIndicator(.hidden)
 		}
 		.onAppear {
-			navigationManager.selectedMap = navigationManager.maps.first
+//			navigationManager.selectedMap = navigationManager.maps.first
+			navigationManager.maps = [Map.map1]
+			navigationManager.selectedMap = Map.map1
+			navigationManager.connect(scanManager.$ean8Code.eraseToAnyPublisher())
 		}
 		.task {
-			navigationManager.maps = await apiManager.fetchMaps()
+//			navigationManager.maps = await apiManager.fetchMaps()
 		}
 		.animation(.easeInOut, value: navigationManager.isNavigating)
 	}

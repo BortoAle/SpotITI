@@ -15,7 +15,7 @@ class ScanManager: NSObject, ObservableObject {
 	let camera: Camera?
 	
 	@Published var ean8Code: String?
-
+	
 	override init() {
 		
 		guard let path = Bundle.main.path(forResource: "Secrets", ofType: "plist"),
@@ -44,7 +44,7 @@ class ScanManager: NSObject, ObservableObject {
 		camera?.switch(toDesiredState: .on)
 		
 		super.init()
-		
+
 		// Add object listener
 		barcodeCapture.addListener(self)
 		
@@ -55,7 +55,7 @@ class ScanManager: NSObject, ObservableObject {
 		let overlay = BarcodeCaptureOverlay(barcodeCapture: barcodeCapture)
 		captureView.addOverlay(overlay)
 		
-		barcodeCapture.feedback.success = Feedback(vibration: nil, sound: nil)
+		barcodeCapture.feedback.success = Feedback(vibration: nil,sound: .default)
 		
 		// Scart scanning
 		barcodeCapture.isEnabled = true

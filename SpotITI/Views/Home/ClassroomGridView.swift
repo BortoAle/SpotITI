@@ -56,7 +56,7 @@ struct ClassroomGridView: View {
 				ToolbarItem(placement: .navigationBarTrailing) {
 					HStack {
 						if debugActive {
-							Text(scanManager.ean8Code ?? "N/A")
+							Text(navigationManager.barcodeValue ?? "N/A")
 						}
 						debugToolbarContent
 					}
