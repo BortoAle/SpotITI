@@ -8,7 +8,7 @@
 import Foundation
 
 struct Vertex: Codable {
-	let id: Int
+	let id: String
 	let x: Int
 	let y: Int
 	let floor: Int

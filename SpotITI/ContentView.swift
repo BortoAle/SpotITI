@@ -59,7 +59,6 @@ extension ContentView {
 	// CompassView on top of the screen
 	var compassView: some View {
 		CompassView()
-			.offset(y: -120)
 			.opacity(0.9)
 	}
 	

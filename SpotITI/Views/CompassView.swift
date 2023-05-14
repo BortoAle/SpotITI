@@ -15,13 +15,14 @@ struct CompassView: View {
 	
 	@EnvironmentObject private var navigationManager: NavigationManager
 	@State private var hapticEngine: CHHapticEngine?
+	let width = UIScreen.main.bounds.width
 	
 	var body: some View {
 		VStack {
 			Image(systemName: "arrow.up")
 				.resizable()
 				.scaledToFit()
-				.frame(height: 190)
+				.frame(width: width/2)
 				.fontWeight(.black)
 				.foregroundColor(Color(uiColor: .secondarySystemBackground))
 				.rotationEffect(.degrees(-navigationManager.heading))

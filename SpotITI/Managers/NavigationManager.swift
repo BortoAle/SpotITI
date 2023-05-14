@@ -14,64 +14,37 @@ import Combine
 
 class NavigationManager: NSObject, ObservableObject, AVCaptureMetadataOutputObjectsDelegate, CLLocationManagerDelegate {
 	
+	// Map properties
 	@Published var maps: [Map] = []
 	@Published var currentVertex: Vertex? = nil
 	@Published var selectedMap: Map? = nil
 	@Published var canReachServer: Bool = true
-	@Published var currentView: ViewType = .home
 	@Published var isNavigating: Bool = false
 	
-	@Published var selectedDetent: PresentationDetent = .large
-	@Published var presentationDetents: Set<PresentationDetent> = []
-	
 	// CompassViewModel properties
-	@Published var heading: Double = 0
+	@Published var barcodeValue: String?
 	@Published var rotation3D: (x: CGFloat, y: CGFloat, z: CGFloat) = (0, 0, 0)
+	@Published var heading: Double = 0
+	
+	private var rotation: CLLocationDirection = 0
 	private var filteredAcceleration: (x: Double, y: Double) = (0, 0)
 	private let filterConstant: Double = 0.1
 	private var locationManager: CLLocationManager
 	private var motionManager: CMMotionManager
 	
+	// Views properties
+	@Published var currentView: ViewType = .home
+	@Published var selectedDetent: PresentationDetent = .large
+	@Published var presentationDetents: Set<PresentationDetent> = []
+	
 	var cancellable : AnyCancellable?
-		
-		func connect(_ publisher: AnyPublisher<String?,Never>) {
-			cancellable = publisher.sink(receiveValue: { (newString) in
-				self.barcodeValue = newString
-			})
-		}
-	@Published var barcodeValue: String? {
-		didSet {
-			currentVertex = selectedMap?.vertices.first(where: { $0.id.codingKey.stringValue == barcodeValue })
-		}
+	func connect(_ publisher: AnyPublisher<String?,Never>) {
+		cancellable = publisher.sink(receiveValue: { (newString) in
+			self.barcodeValue = newString
+			self.updateCurrentVertex()
+			self.updateHeading()
+		})
 	}
-	
-	func startNavigation() {
-		isNavigating = true
-		playSoundAndHapticFeedback()
-	}
-	
-	func stopNavigation() {
-		isNavigating = false
-	}
-	
-	func setCurrentView(view: ViewType) {
-		let viewToDetents: [ViewType: PresentationDetent] = [
-			.home: .large,
-			.detail: .fraction(0.35),
-			.navigation: .fraction(0.2)
-		]
-		
-		guard let detent = viewToDetents[view] else { return }
-		
-		presentationDetents = [.large, .fraction(0.35), .fraction(0.2)]
-		currentView = view
-		selectedDetent = detent
-		
-		DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-			self.presentationDetents = [detent]
-		}
-	}
-
 	
 	override init() {
 		
@@ -109,49 +82,79 @@ class NavigationManager: NSObject, ObservableObject, AVCaptureMetadataOutputObje
 			}
 		}
 	}
+}
+
+extension NavigationManager {
 	
-//		func updateCurrentVertex() {
-//			if let selectedMap = maps.first {
-//				withAnimation(.easeInOut) {
-//					currentVertex = selectedMap.vertices.first(where: {
-//						$0.id.codingKey.stringValue == qrCodeValue
-//					})!
-//				}
-//			}
-//		}
-//	
-	func directionBetweenPoints(current: CGPoint, next: CGPoint) -> Double {
+	func startNavigation() {
+		isNavigating = true
+		playSoundAndHapticFeedback()
+	}
+	
+	func stopNavigation() {
+		isNavigating = false
+	}
+	
+	func updateCurrentVertex() {
+		if let map = selectedMap, let vertex = map.vertices.first(where: { $0.id.codingKey.stringValue == barcodeValue }) {
+			currentVertex = vertex
+			print("Updated")
+		}
+	}
+	
+	func updateHeading() {
+		guard let selectedMap = selectedMap,
+			  let currentVertexIndex = selectedMap.vertices.firstIndex(where: { $0.id == barcodeValue }),
+			  currentVertexIndex < (selectedMap.vertices.count - 1) else { return }
+		
+		let currentVertex = selectedMap.vertices[currentVertexIndex]
+		let nextVertex = selectedMap.vertices[currentVertexIndex+1]
+		
+		directionBetweenPoints(
+			current: CGPoint(x: Double(currentVertex.x), y: Double(currentVertex.y)),
+			next: CGPoint(x: Double(nextVertex.x), y: Double(nextVertex.y))
+		)
+	}
+	
+	func directionBetweenPoints(current: CGPoint, next: CGPoint) {
 		let deltaX = next.x - current.x
 		let deltaY = next.y - current.y
+		print(current.x)
+		print(next.x)
+		print(current.y)
+		print(next.y)
 		let angleInRadians = atan2(deltaY, deltaX)
 		let angleInDegrees = angleInRadians * 180 / .pi
-		return angleInDegrees
+		print(angleInDegrees)
+		rotation = angleInDegrees
+		
 	}
 	
 	func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
 		DispatchQueue.main.async {
-			self.heading = newHeading.trueHeading
+			withAnimation {
+				self.heading = newHeading.trueHeading - self.rotation
+			}
+			print(self.rotation)
 		}
 	}
 	
-	func playSoundAndHapticFeedback() {
-			if let soundURL = Bundle.main.url(forResource: "confirm", withExtension: "m4a") {
-				var soundID: SystemSoundID = 0
-				AudioServicesCreateSystemSoundID(soundURL as CFURL, &soundID)
-				AudioServicesPlaySystemSound(soundID)
-			}
-			
-		let generator = UIImpactFeedbackGenerator(style: .heavy)
+	func setCurrentView(view: ViewType) {
+		let viewToDetents: [ViewType: PresentationDetent] = [
+			.home: .large,
+			.detail: .fraction(0.35),
+			.navigation: .fraction(0.2)
+		]
 		
-		DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-			for i in 0..<3 {
-				DispatchQueue.main.asyncAfter(deadline: .now() + (0.2 * Double(i))) {
-					generator.impactOccurred()
-				}
-			}
+		guard let detent = viewToDetents[view] else { return }
+		
+		presentationDetents = [.large, .fraction(0.35), .fraction(0.2)]
+		currentView = view
+		selectedDetent = detent
+		
+		DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+			self.presentationDetents = [detent]
 		}
-
-		
 	}
 	
 }

@@ -56,7 +56,10 @@ struct ClassroomGridView: View {
 				ToolbarItem(placement: .navigationBarTrailing) {
 					HStack {
 						if debugActive {
-							Text(navigationManager.barcodeValue ?? "N/A")
+							HStack {
+								Text(navigationManager.currentVertex?.x.codingKey.stringValue ?? "N/A")
+								Text(navigationManager.currentVertex?.y.codingKey.stringValue ?? "N/A")
+							}
 						}
 						debugToolbarContent
 					}
