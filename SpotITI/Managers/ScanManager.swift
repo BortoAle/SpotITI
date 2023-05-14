@@ -32,7 +32,12 @@ class ScanManager: NSObject, ObservableObject {
 		barcodeCapture = BarcodeCapture(context: dataCaptureContext, settings: settings)
 		
 		// Configure Camera
-		let cameraSettings = BarcodeCapture.recommendedCameraSettings
+		let cameraSettings = CameraSettings()
+		cameraSettings.focusRange = .far
+		cameraSettings.macroMode = .off
+		cameraSettings.preferredResolution = .hd
+		cameraSettings.focusGestureStrategy = .none
+		
 		camera = Camera.default
 		camera?.apply(cameraSettings)
 		dataCaptureContext.setFrameSource(camera, completionHandler: nil)
@@ -50,13 +55,15 @@ class ScanManager: NSObject, ObservableObject {
 		let overlay = BarcodeCaptureOverlay(barcodeCapture: barcodeCapture)
 		captureView.addOverlay(overlay)
 		
+		barcodeCapture.feedback.success = Feedback(vibration: nil, sound: nil)
+		
 		// Scart scanning
 		barcodeCapture.isEnabled = true
 	}
 }
 
 extension ScanManager: BarcodeCaptureListener {
-	
+
 	func barcodeCapture(_ barcodeCapture: BarcodeCapture, didScanIn session: BarcodeCaptureSession, frameData: FrameData) {
 		let recognizedBarcodes = session.newlyRecognizedBarcodes
 		for barcode in recognizedBarcodes where barcode.symbology == .ean8 {

@@ -39,7 +39,7 @@ struct CompassView: View {
 					anchorZ: 0.0,
 					perspective: 0.5
 				)
-				.foregroundColor(Color(uiColor: .secondarySystemBackground))
+				.foregroundColor(Color(uiColor: .systemBackground))
 		}
 	}
 }

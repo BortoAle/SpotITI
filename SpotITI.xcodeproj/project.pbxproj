@@ -217,11 +217,10 @@
 			};
 			buildConfigurationList = 6A2A1C3529C2330200FC359F /* Build configuration list for PBXProject "SpotITI" */;
 			compatibilityVersion = "Xcode 14.0";
-			developmentRegion = en;
+			developmentRegion = it;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				en,
-				Base,
+				it,
 			);
 			mainGroup = 6A2A1C3129C2330200FC359F;
 			packageReferences = (

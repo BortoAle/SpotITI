@@ -20,7 +20,7 @@ class NavigationManager: NSObject, ObservableObject, AVCaptureMetadataOutputObje
 	@Published var currentView: ViewType = .home
 	@Published var isNavigating: Bool = false
 	
-	@Published var selectedDetent: PresentationDetent = .fraction(0.99)
+	@Published var selectedDetent: PresentationDetent = .large
 	@Published var presentationDetents: Set<PresentationDetent> = []
 	
 	// CompassViewModel properties
@@ -42,14 +42,14 @@ class NavigationManager: NSObject, ObservableObject, AVCaptureMetadataOutputObje
 	
 	func setCurrentView(view: ViewType) {
 		let viewToDetents: [ViewType: PresentationDetent] = [
-			.home: .fraction(0.99),
+			.home: .large,
 			.detail: .fraction(0.35),
 			.navigation: .fraction(0.2)
 		]
 		
 		guard let detent = viewToDetents[view] else { return }
 		
-		presentationDetents = [.fraction(0.99), .fraction(0.35), .fraction(0.2)]
+		presentationDetents = [.large, .fraction(0.35), .fraction(0.2)]
 		currentView = view
 		selectedDetent = detent
 		

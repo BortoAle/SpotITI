@@ -14,12 +14,34 @@ struct ClassroomGridView: View {
 	
 	@EnvironmentObject private var navigationManager: NavigationManager
 	@EnvironmentObject private var scanManager: ScanManager
-
 	
+	@State var searchText: String = ""
 	@State private var debugActive: Bool = false
-
+	
 	var body: some View {
 		NavigationStack {
+			
+//			HStack {
+//				ForEach(0..<3) { _ in
+//					HStack(spacing: 2) {
+//						Text("Type")
+//							.font(.callout)
+//						Image(systemName: "chevron.down")
+//							.font(.caption)
+//					}
+//						.fontWeight(.semibold)
+//						.foregroundColor(.secondary)
+//						.padding(.vertical, 8)
+//						.padding(.horizontal)
+//						.background {
+//							Capsule()
+//								.foregroundColor(Color(uiColor: .secondarySystemBackground))
+//						}
+//				}
+//			}
+//			.frame(maxWidth: .infinity, alignment: .leading)
+//			.padding(.horizontal)
+			
 			ScrollView {
 				VStack(alignment: .leading) {
 					utilitySection
@@ -27,19 +49,19 @@ struct ClassroomGridView: View {
 				}
 				.padding()
 			}
-				.navigationTitle("Aule")
-				.navigationBarTitleDisplayMode(.inline)
-				.searchable(text: .constant(""))
-				.toolbar {
-					ToolbarItem(placement: .navigationBarTrailing) {
-						HStack {
-							if debugActive {
-								Text(scanManager.ean8Code ?? "N/A")
-							}
-							debugToolbarContent
+			.navigationTitle("SpotITI")
+			.navigationBarTitleDisplayMode(.inline)
+			.searchable(text: $searchText, prompt: "Cerca un aula")
+			.toolbar {
+				ToolbarItem(placement: .navigationBarTrailing) {
+					HStack {
+						if debugActive {
+							Text(scanManager.ean8Code ?? "N/A")
 						}
+						debugToolbarContent
 					}
 				}
+			}
 		}
 	}
 	
@@ -72,7 +94,7 @@ extension ClassroomGridView {
 			}
 		}
 	}
-
+	
 	// Section for classrooms
 	var classroomsSection: some View {
 		VStack(alignment: .leading) {
