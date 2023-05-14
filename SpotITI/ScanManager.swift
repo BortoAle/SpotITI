@@ -8,10 +8,7 @@
 import ScanditBarcodeCapture
 import ScanditCaptureCore
 
-import ScanditBarcodeCapture
-import ScanditCaptureCore
-
-class ScanditEAN8Scanner: NSObject, ObservableObject {
+class ScanManager: NSObject, ObservableObject {
 
 	var dataCaptureContext: DataCaptureContext
 	var barcodeCapture: BarcodeCapture
@@ -28,8 +25,6 @@ class ScanditEAN8Scanner: NSObject, ObservableObject {
 		}
 
 		dataCaptureContext = DataCaptureContext(licenseKey: apiKey)
-
-		
 		
 		// Configura le impostazioni di scansione
 		let settings = BarcodeCaptureSettings()
@@ -60,7 +55,7 @@ class ScanditEAN8Scanner: NSObject, ObservableObject {
 	}
 }
 
-extension ScanditEAN8Scanner: BarcodeCaptureListener {
+extension ScanManager: BarcodeCaptureListener {
 	
 	func barcodeCapture(_ barcodeCapture: BarcodeCapture, didScanIn session: BarcodeCaptureSession, frameData: FrameData) {
 		let recognizedBarcodes = session.newlyRecognizedBarcodes

@@ -14,21 +14,3 @@ struct Map: Codable {
 	let vertices: [Vertex]
 	let calculatedRoutes: [Route]
 }
-
-struct Edge: Codable {
-	let id: String
-	let startVertexId: String
-	let endVertexId: String
-	let weight: Int
-}
-
-struct Vertex: Codable {
-	let id: Int
-	let x: Int
-	let y: Int
-	let floor: Int
-}
-
-struct Route: Codable {
-	
-}

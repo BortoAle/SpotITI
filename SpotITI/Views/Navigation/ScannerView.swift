@@ -11,7 +11,7 @@ import ScanditBarcodeCapture
 
 struct ScannerView: UIViewRepresentable {
 	
-	@ObservedObject var scanner: ScanditEAN8Scanner
+	@ObservedObject var scanner: ScanManager
 
 	func makeUIView(context: Context) -> ScanditCaptureCore.DataCaptureView {
 		let captureView = DataCaptureView(context: scanner.dataCaptureContext, frame: .zero)
@@ -29,7 +29,8 @@ struct ScannerView: UIViewRepresentable {
 }
 
 struct ScannerCameraView: View {
-	@StateObject var scanner = ScanditEAN8Scanner()
+	
+	@StateObject var scanner = ScanManager()
 
 	var body: some View {
 		VStack {
@@ -41,4 +42,3 @@ struct ScannerCameraView: View {
 		}
 	}
 }
-

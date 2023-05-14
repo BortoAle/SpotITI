@@ -9,7 +9,7 @@ import SwiftUI
 
 struct NavigationView: View {
 	
-	@EnvironmentObject var locationManager: LocationManager
+	@EnvironmentObject var navigationManager: NavigationManager
 	
 	var body: some View {
 		VStack(spacing: 32) {
@@ -41,9 +41,9 @@ struct NavigationView: View {
 						
 						Button {
 							withAnimation(.easeInOut) {
-								locationManager.currentView = .home
+								navigationManager.currentView = .home
 							}
-							locationManager.selectedDetent = .fraction(0.99)
+							navigationManager.selectedDetent = .fraction(0.99)
 							
 						} label: {
 							HStack {
@@ -76,7 +76,7 @@ struct NavigationView: View {
 struct NavigationView_Previews: PreviewProvider {
 	static var previews: some View {
 		NavigationView()
-			.environmentObject(LocationManager())
+			.environmentObject(NavigationManager())
 			.previewLayout(.sizeThatFits)
 	}
 }

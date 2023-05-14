@@ -10,14 +10,14 @@ import SwiftUI
 @main
 struct SpotITIApp: App {
 	
-	@StateObject var locationManager = LocationManager()
-	@StateObject var scanner = ScanditEAN8Scanner()
+	@StateObject var navigationManager = NavigationManager()
+	@StateObject var scanManager = ScanManager()
 	
 	var body: some Scene {
 		WindowGroup {
 			ContentView()
-				.environmentObject(locationManager)
-				.environmentObject(scanner)
+				.environmentObject(navigationManager)
+				.environmentObject(scanManager)
 		}
 	}
 }
