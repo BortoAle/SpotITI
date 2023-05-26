@@ -8,8 +8,6 @@
 import SwiftUI
 import AVFoundation
 
-// MARK: - ClassroomGridView
-
 struct ClassroomGridView: View {
 	
 	@EnvironmentObject private var navigationManager: NavigationManager
@@ -56,9 +54,10 @@ struct ClassroomGridView: View {
 				ToolbarItem(placement: .navigationBarTrailing) {
 					HStack {
 						if debugActive {
+							let vertex = try? navigationManager.getCurrentVertex()
 							HStack {
-								Text(navigationManager.currentVertex?.x.codingKey.stringValue ?? "N/A")
-								Text(navigationManager.currentVertex?.y.codingKey.stringValue ?? "N/A")
+								Text(vertex?.x ?? 0, format: .number)
+								Text(vertex?.y ?? 0, format: .number)
 							}
 						}
 						debugToolbarContent
@@ -77,11 +76,6 @@ struct ClassroomGridView: View {
 		}
 	}
 	
-}
-
-// MARK: - Subviews
-
-extension ClassroomGridView {
 	// Section for utilities
 	var utilitySection: some View {
 		VStack(alignment: .leading) {
@@ -117,8 +111,6 @@ extension ClassroomGridView {
 		}
 	}
 }
-
-// MARK: - PreviewProvider
 
 struct ClassroomGridView_Previews: PreviewProvider {
 	static var previews: some View {

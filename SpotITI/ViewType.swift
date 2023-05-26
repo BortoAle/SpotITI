@@ -8,5 +8,7 @@
 import Foundation
 
 enum ViewType {
+	
 	case home, detail, navigation
+	
 }

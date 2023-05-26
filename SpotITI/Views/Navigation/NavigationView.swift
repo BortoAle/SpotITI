@@ -10,6 +10,8 @@ import SwiftUI
 struct NavigationView: View {
 	
 	@EnvironmentObject var navigationManager: NavigationManager
+	@EnvironmentObject var scanManager: ScanManager
+	@EnvironmentObject var apiManager: APIManager
 
 	private let buttonColor: Color = .red
 	private let capsuleColor: Color = Color(uiColor: .secondarySystemBackground)
@@ -21,9 +23,13 @@ struct NavigationView: View {
 			progressView
 		}
 		.padding()
+		.onChange(of: scanManager.ean8Code!) { newValue in
+			navigationManager.updatePosition(barCodeValue: newValue)
+		}
 	}
 
 	var directionView: some View {
+		
 		HStack {
 			Image(systemName: "stairs")
 				.fontWeight(.bold)

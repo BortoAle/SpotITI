@@ -7,17 +7,12 @@
 
 import SwiftUI
 
-// MARK: - ContentView
-
 struct ContentView: View {
+	
 	@EnvironmentObject private var navigationManager: NavigationManager
+	@EnvironmentObject private var apiManager: APIManager
 	@EnvironmentObject var scanManager: ScanManager
 	
-	let apiManager = APIManager()
-	
-	@State private var showCurrentPosition: Bool = true
-	
-	// Body of the ContentView
 	var body: some View {
 		ZStack {
 			scannerView
@@ -34,32 +29,7 @@ struct ContentView: View {
 				.presentationCornerRadius(25)
 				.presentationDragIndicator(.hidden)
 		}
-		.onAppear {
-//			navigationManager.selectedMap = navigationManager.maps.first
-			navigationManager.maps = [Map.map1]
-			navigationManager.selectedMap = Map.map1
-			navigationManager.connect(scanManager.$ean8Code.eraseToAnyPublisher())
-		}
-		.task {
-//			navigationManager.maps = await apiManager.fetchMaps()
-		}
 		.animation(.easeInOut, value: navigationManager.isNavigating)
-	}
-}
-
-// MARK: - Subviews and computed properties
-
-extension ContentView {
-	// ScannerView that covers the entire screen
-	var scannerView: some View {
-		ScannerView(scanner: scanManager)
-			.ignoresSafeArea()
-	}
-	
-	// CompassView on top of the screen
-	var compassView: some View {
-		CompassView()
-			.opacity(0.9)
 	}
 	
 	// The main content of the NavigationStack
@@ -74,10 +44,20 @@ extension ContentView {
 				NavigationView()
 		}
 	}
+
+	// ScannerView that covers the entire screen
+	var scannerView: some View {
+		ScannerView(scanner: scanManager)
+			.ignoresSafeArea()
+	}
+	
+	// CompassView on top of the screen
+	var compassView: some View {
+		CompassView()
+			.opacity(0.9)
+	}
 	
 }
-
-// MARK: - PreviewProvider
 
 struct ContentView_Previews: PreviewProvider {
 	static var previews: some View {

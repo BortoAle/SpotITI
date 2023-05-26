@@ -6,7 +6,7 @@
 //
 
 import AVFoundation
-import UIKit
+import SwiftUI
 
 func playSoundAndHapticFeedback() {
 		if let soundURL = Bundle.main.url(forResource: "confirm", withExtension: "m4a") {
@@ -27,3 +27,24 @@ func playSoundAndHapticFeedback() {
 
 	
 }
+
+struct DisableIdleTimer: ViewModifier {
+	let disable: Bool
+
+	func body(content: Content) -> some View {
+		content
+			.onAppear {
+				UIApplication.shared.isIdleTimerDisabled = disable
+			}
+			.onDisappear {
+				UIApplication.shared.isIdleTimerDisabled = false
+			}
+	}
+}
+
+extension View {
+	func disableIdleTimer(_ disable: Bool) -> some View {
+		self.modifier(DisableIdleTimer(disable: disable))
+	}
+}
+

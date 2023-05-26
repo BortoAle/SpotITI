@@ -7,18 +7,32 @@
 
 import Foundation
 
-class APIManager {
+class APIManager: ObservableObject {
 	
-	func fetchMaps() async -> [Map] {
-		let url = URL(string: "http://192.168.1.2:3000/maps")!
+	// Map properties
+	@Published var vertices: [Vertex] = []
+	
+	func getRoutes(mapId: Int, startVertexId: Int, endVertexId: Int) async throws -> [Route] {
+		guard let url = URL(string: "https://bussola.voceaglistudenti.ml/maps/3/routes/\(startVertexId)/\(endVertexId)") else {
+			throw SpotITIError.serverError
+		}
 		do {
 			let (data, _) = try await URLSession.shared.data(from: url)
-			let decodedData = try JSONDecoder().decode([Map].self, from: data)
+			return try decodeRoutes(from: data)
+		} catch {
+			throw SpotITIError.serverError
+		}
+
+	}
+
+	func decodeRoutes(from data: Data) throws -> [Route] {
+		do {
+			let decodedData = try JSONDecoder().decode([Route].self, from: data)
+			print(decodedData)
 			return decodedData
 		} catch {
-			print(error.localizedDescription)
+			throw SpotITIError.serverError
 		}
-		return []
 	}
-	
+//
 }

@@ -8,8 +8,10 @@
 import Foundation
 
 struct Vertex: Codable {
-	let id: String
+	
+	let id: Int
 	let x: Int
 	let y: Int
 	let floor: Int
+	
 }

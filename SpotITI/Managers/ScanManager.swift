@@ -14,7 +14,7 @@ class ScanManager: NSObject, ObservableObject {
 	let barcodeCapture: BarcodeCapture
 	let camera: Camera?
 	
-	@Published var ean8Code: String?
+	@Published var ean8Code: Int?
 	
 	override init() {
 		
@@ -68,7 +68,9 @@ extension ScanManager: BarcodeCaptureListener {
 		let recognizedBarcodes = session.newlyRecognizedBarcodes
 		for barcode in recognizedBarcodes where barcode.symbology == .ean8 {
 			DispatchQueue.main.async {
-				self.ean8Code = barcode.data
+				if let data = barcode.data {
+					self.ean8Code = Int(data)
+				}
 			}
 		}
 		barcodeCapture.isEnabled = false

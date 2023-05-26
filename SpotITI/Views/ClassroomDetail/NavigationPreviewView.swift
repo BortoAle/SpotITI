@@ -7,14 +7,14 @@
 
 import SwiftUI
 
-import SwiftUI
-
-// MARK: - NavigationPreviewView
-
 struct NavigationPreviewView: View {
 	
 	@EnvironmentObject private var navigationManager: NavigationManager
-
+	@EnvironmentObject private var apiManager: APIManager
+	@EnvironmentObject private var scanManager: ScanManager
+	
+	@State var canNavigate: Bool = true
+	
 	var body: some View {
 		VStack(spacing: 32) {
 			navigationHeader
@@ -23,11 +23,7 @@ struct NavigationPreviewView: View {
 		}
 		.padding()
 	}
-}
 
-// MARK: - Subviews
-
-extension NavigationPreviewView {
 	// Header of the navigation
 	var navigationHeader: some View {
 		HStack {
@@ -119,8 +115,14 @@ extension NavigationPreviewView {
 	// Navigation button
 	var navigationButton: some View {
 		Button {
-			navigationManager.setCurrentView(view: .navigation)
-			navigationManager.startNavigation()
+			Task {
+				guard let currentVertexId = scanManager.ean8Code, let route = try await apiManager.getRoutes(mapId: 1, startVertexId: currentVertexId, endVertexId: 54027541).first else {
+					canNavigate = false
+					return
+				}
+				canNavigate = true
+				try await navigationManager.startNavigation(route: route)
+			}
 		} label: {
 			HStack {
 				Image(systemName: "paperplane.fill")
@@ -132,6 +134,7 @@ extension NavigationPreviewView {
 		}
 		.buttonStyle(.borderedProminent)
 		.controlSize(.mini)
+		.disabled(!canNavigate)
 	}
 	
 	// Info item for the grid

@@ -5,24 +5,24 @@
 //  Created by Alessandro Bortoluzzi on 29/04/23.
 //
 
-import AVFoundation
 import SwiftUI
-import ScanditBarcodeCapture
+import AVFoundation
 import CoreMotion
 import CoreLocation
-import Combine
+import ScanditBarcodeCapture
 
 class NavigationManager: NSObject, ObservableObject, AVCaptureMetadataOutputObjectsDelegate, CLLocationManagerDelegate {
 	
-	// Map properties
-	@Published var maps: [Map] = []
-	@Published var currentVertex: Vertex? = nil
-	@Published var selectedMap: Map? = nil
-	@Published var canReachServer: Bool = true
 	@Published var isNavigating: Bool = false
+	var currentRoute: Route? = nil
+	var currentVertexIndex: Int? = nil
+	
+	// Views properties
+	@Published var currentView: ViewType = .home
+	@Published var selectedDetent: PresentationDetent = .large
+	@Published var presentationDetents: Set<PresentationDetent> = []
 	
 	// CompassViewModel properties
-	@Published var barcodeValue: String?
 	@Published var rotation3D: (x: CGFloat, y: CGFloat, z: CGFloat) = (0, 0, 0)
 	@Published var heading: Double = 0
 	
@@ -31,20 +31,6 @@ class NavigationManager: NSObject, ObservableObject, AVCaptureMetadataOutputObje
 	private let filterConstant: Double = 0.1
 	private var locationManager: CLLocationManager
 	private var motionManager: CMMotionManager
-	
-	// Views properties
-	@Published var currentView: ViewType = .home
-	@Published var selectedDetent: PresentationDetent = .large
-	@Published var presentationDetents: Set<PresentationDetent> = []
-	
-	var cancellable : AnyCancellable?
-	func connect(_ publisher: AnyPublisher<String?,Never>) {
-		cancellable = publisher.sink(receiveValue: { (newString) in
-			self.barcodeValue = newString
-			self.updateCurrentVertex()
-			self.updateHeading()
-		})
-	}
 	
 	override init() {
 		
@@ -57,7 +43,7 @@ class NavigationManager: NSObject, ObservableObject, AVCaptureMetadataOutputObje
 		
 		// CLLocationManager setup
 		locationManager.delegate = self
-		locationManager.desiredAccuracy = kCLLocationAccuracyBest
+		locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation 
 		locationManager.startUpdatingHeading()
 		
 		if motionManager.isAccelerometerAvailable {
@@ -86,37 +72,63 @@ class NavigationManager: NSObject, ObservableObject, AVCaptureMetadataOutputObje
 
 extension NavigationManager {
 	
-	func startNavigation() {
+	func getCurrentVertex() throws -> Vertex {
+		guard let vertices = currentRoute?.vertices, let index = currentVertexIndex else {
+			throw SpotITIError.noVertexSet
+		}
+		return vertices[index]
+	}
+	
+	func updatePosition(barCodeValue: Int) {
+		updateCurrentVertexIndex(barcodeValue: barCodeValue)
+		updateHeading()
+	}
+	
+	func startNavigation(route: Route) async throws {
+		currentRoute = route
+		setCurrentView(view: .navigation)
 		isNavigating = true
 		playSoundAndHapticFeedback()
 	}
 	
 	func stopNavigation() {
 		isNavigating = false
+		setCurrentView(view: .home)
 	}
 	
-	func updateCurrentVertex() {
-		if let map = selectedMap, let vertex = map.vertices.first(where: { $0.id.codingKey.stringValue == barcodeValue }) {
-			currentVertex = vertex
-			print("Updated")
+	func updateCurrentVertexIndex(barcodeValue: Int) {
+		if let index = currentRoute?.vertices.firstIndex(where: { $0.id == barcodeValue }) {
+			currentVertexIndex = index
 		}
 	}
 	
 	func updateHeading() {
-		guard let selectedMap = selectedMap,
-			  let currentVertexIndex = selectedMap.vertices.firstIndex(where: { $0.id == barcodeValue }),
-			  currentVertexIndex < (selectedMap.vertices.count - 1) else { return }
-		
-		let currentVertex = selectedMap.vertices[currentVertexIndex]
-		let nextVertex = selectedMap.vertices[currentVertexIndex+1]
-		
-		directionBetweenPoints(
-			current: CGPoint(x: Double(currentVertex.x), y: Double(currentVertex.y)),
-			next: CGPoint(x: Double(nextVertex.x), y: Double(nextVertex.y))
-		)
+		if let vertices = currentRoute?.vertices, let index = currentVertexIndex {
+
+			guard index < vertices.count-1 else {
+				return
+			}
+			
+			let currentVertex = vertices[index]
+			let nextVertex = vertices[index+1]
+			
+			rotation = directionBetweenPoints(
+				current: CGPoint(x: Double(currentVertex.x), y: Double(currentVertex.y)),
+				next: CGPoint(x: Double(nextVertex.x), y: Double(nextVertex.y))
+			)
+		}
 	}
 	
-	func directionBetweenPoints(current: CGPoint, next: CGPoint) {
+	func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
+		DispatchQueue.main.async {
+			withAnimation {
+				#warning("rotazione anomala")
+				self.heading = newHeading.trueHeading - self.rotation
+			}
+		}
+	}
+	
+	func directionBetweenPoints(current: CGPoint, next: CGPoint) -> CLLocationDirection {
 		let deltaX = next.x - current.x
 		let deltaY = next.y - current.y
 		print(current.x)
@@ -125,19 +137,10 @@ extension NavigationManager {
 		print(next.y)
 		let angleInRadians = atan2(deltaY, deltaX)
 		let angleInDegrees = angleInRadians * 180 / .pi
-		print(angleInDegrees)
-		rotation = angleInDegrees
+		return angleInDegrees
 		
 	}
-	
-	func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
-		DispatchQueue.main.async {
-			withAnimation {
-				self.heading = newHeading.trueHeading - self.rotation
-			}
-			print(self.rotation)
-		}
-	}
+
 	
 	func setCurrentView(view: ViewType) {
 		let viewToDetents: [ViewType: PresentationDetent] = [
