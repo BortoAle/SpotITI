@@ -33,5 +33,6 @@ struct UtilityCard: View {
 struct UtilityCard_Previews: PreviewProvider {
     static var previews: some View {
 		UtilityCard(name: "Presidenza", icon: "👑")
+			.previewLayout(.fixed(width: 150, height: 60))
     }
 }

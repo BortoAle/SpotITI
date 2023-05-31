@@ -13,7 +13,10 @@ class APIManager: ObservableObject {
 	@Published var utilities: [Spot] = []
 	@Published var categories: [Category] = []
 	
-	/// Return the best route given a start node Id and a destination Category
+	/// Fetches available spots from the server and categorizes the classrooms.
+	///
+	/// This asynchronous method fetches the available spots from the server, filters out utilities from the spots to get the classrooms,
+	/// and categorizes these classrooms.
 	@MainActor
 	func getSpots() async throws {
 		let url = "https://bussola.voceaglistudenti.ml/spots"
@@ -27,7 +30,9 @@ class APIManager: ObservableObject {
 		self.classrooms = categorizeClassrooms(classrooms: spots)
 	}
 	
-	/// Return the best route given a start node Id and a destination Category
+	/// Fetches available categories from the server and filters out the utilities.
+	///
+	/// This asynchronous method fetches the available categories from the server and filters out utilities to get the needed categories.
 	@MainActor
 	func getCategories() async throws {
 		let url = "https://bussola.voceaglistudenti.ml/categories"
@@ -38,36 +43,48 @@ class APIManager: ObservableObject {
 		self.categories = categories.filter({ $0.type.isUtility })
 	}
 	
-	/// Return the best route given a start Node id and a destination Node id
+	/// Fetches routes between the provided start and end node ids from the server.
 	///
-	/// - Parameter startNodeId: the Node id where the user is positioned
-	/// - Parameter endNodeId: the destination Node id
+	/// This asynchronous method fetches the available routes between the provided start and end node ids from the server.
+	///
+	/// - Parameters:
+	/// 	- startNodeId: The Node id where the user is positioned.
+	/// 	- endNodeId: The destination Node id.
 	func getRoutes(startNodeId: Int, endNodeId: Int) async throws -> [Route] {
 		let url = "https://bussola.voceaglistudenti.ml/routes/\(startNodeId)/\(endNodeId)"
 		return try await fetchData(url: url)
 	}
 	
-	/// Return the best route given a start node Id and a destination Spot
+	/// Fetches routes between the provided start node id and the destination Spot from the server.
 	///
-	/// - Parameter startNodeId: the Node id where the user is positioned
-	/// - Parameter endSpot: the destination Spot
+	/// This asynchronous method fetches the available routes between the provided start node id and the destination Spot from the server.
+	///
+	/// - Parameters:
+	/// 	- startNodeId: The Node id where the user is positioned.
+	/// 	- endSpot: The destination Spot.
 	func getRoutes(startNodeId: Int, endSpot: Spot) async throws -> [Route] {
 		let url = "https://bussola.voceaglistudenti.ml/routes/\(startNodeId)/spot/\(endSpot.id)"
 		return try await fetchData(url: url)
 	}
 	
-	/// Return the best route given a start node id and a destination Category
+	/// Fetches routes between the provided start node id and the destination Category from the server.
 	///
-	/// - Parameter startNodeId: the Node id where the user is positioned
-	/// - Parameter endCategory: the destination Category
+	/// This asynchronous method fetches the available routes between the provided start node id and the destination Category from the server.
+	///
+	/// - Parameters:
+	/// 	- startNodeId: The Node id where the user is positioned.
+	/// 	- endCategory: The destination Category.
 	func getRoutes(startNodeId: Int, endCategory: Category.CategoryType) async throws -> [Route] {
 		let url = "https://bussola.voceaglistudenti.ml/routes/\(startNodeId)/category/\(endCategory.name)"
 		return try await fetchData(url: url)
 	}
 	
-	/// Categorizes classrooms into a dictionary with a key for every building and all the building classrooms as values
+	/// Categorizes the provided classrooms into a dictionary where the keys are the first letters of the classroom names.
 	///
-	/// - Parameter classrooms: the classrooms to categorize
+	/// This method categorizes the provided classrooms into a dictionary.
+	/// The keys of the dictionary are the first letters of the classroom names, and the correspondent values are the classrooms associated to that building
+	///
+	/// - Parameter classrooms: The classrooms to categorize.
 	private func categorizeClassrooms(classrooms: [Spot]) -> [Character: [Spot]] {
 		
 		var categorizedClassrooms: [Character: [Spot]] = [:]
@@ -87,6 +104,11 @@ class APIManager: ObservableObject {
 		return categorizedClassrooms
 	}
 	
+	/// Fetches data from the server at the specified URL.
+	///
+	/// This asynchronous method fetches data from the server at the specified URL and decodes it into the provided generic type `T`.
+	///
+	/// - Parameter url: The URL string from where data should be fetched.
 	func fetchData<T: Codable>(url: String) async throws -> [T] {
 		guard let url = URL(string: url) else {
 			throw SpotITIError.urlError
@@ -98,10 +120,14 @@ class APIManager: ObservableObject {
 		return try decodeData(from: data)
 	}
 	
-}
-
-extension APIManager {
-	
+	/// Decodes JSON data into an array of a specified type.
+	///
+	/// This method attempts to decode the provided JSON data into an array of a specified `Codable` type `T`.
+	/// If decoding fails, it throws the error that occurred during the process.
+	///
+	/// - Parameter data: The JSON data to decode.
+	/// - Returns: An array of `T` if the decoding was successful.
+	/// - Throws: An error if the decoding was unsuccessful.
 	private func decodeData<T: Codable>(from data: Data) throws -> [T] {
 		do {
 			let decodedData = try JSONDecoder().decode([T].self, from: data)
@@ -111,26 +137,5 @@ extension APIManager {
 			throw error
 		}
 	}
-	
-//
-//	private func decodeSpots(from data: Data) throws -> [Spot] {
-//		do {
-//			let decodedData = try JSONDecoder().decode([Spot].self, from: data)
-//			print(decodedData)
-//			return decodedData
-//		} catch {
-//			throw SpotITIError.serverError
-//		}
-//	}
-//
-//	private func decodeRoutes(from data: Data) throws -> [Route] {
-//		do {
-//			let decodedData = try JSONDecoder().decode([Route].self, from: data)
-//			print(decodedData)
-//			return decodedData
-//		} catch {
-//			throw SpotITIError.serverError
-//		}
-//	}
 	
 }

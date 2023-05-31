@@ -23,7 +23,8 @@ struct NavigationView: View {
 			progressView
 		}
 		.padding()
-		.onChange(of: scanManager.ean8Code!) { newValue in
+		.onChange(of: scanManager.ean8Code ?? 0) { newValue in
+		#warning("se non funziona controllare default value 0")
 			navigationManager.updatePosition(barcodeValue: newValue)
 		}
 	}
@@ -99,7 +100,9 @@ struct NavigationView: View {
 struct NavigationView_Previews: PreviewProvider {
 	static var previews: some View {
 		NavigationView()
-			.environmentObject(NavigationManager())
 			.previewLayout(.sizeThatFits)
+			.environmentObject(NavigationManager())
+			.environmentObject(ScanManager())
+			.environmentObject(APIManager())
 	}
 }

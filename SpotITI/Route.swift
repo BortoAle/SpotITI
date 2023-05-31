@@ -12,4 +12,9 @@ struct Route: Codable {
 	let nodes: [Node]
 	let lenght: Int
 	
+	static let mockup =  Route(
+		nodes: [],
+		lenght: 0
+	)
+	
 }

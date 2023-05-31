@@ -13,8 +13,6 @@ struct ContentView: View {
 	@EnvironmentObject private var apiManager: APIManager
 	@EnvironmentObject var scanManager: ScanManager
 	
-	@AppStorage("utilityDisplayMode") var utilityDisplayMode: UtilityDisplayMode = .grouped
-	
 	var body: some View {
 		ZStack {
 			scannerView
@@ -32,23 +30,6 @@ struct ContentView: View {
 				.presentationDragIndicator(.hidden)
 		}
 		.animation(.easeInOut, value: navigationManager.isNavigating)
-		.task {
-			do {
-				// Fetch spots
-				try await apiManager.getSpots()
-				
-				// Fetch utilities
-				switch utilityDisplayMode {
-					case .grouped:
-						try await apiManager.getCategories()
-					case .all:
-						// Manage single spot fetch
-						return
-				}
-			} catch {
-				print(error.localizedDescription)
-			}
-		}
 	}
 	
 	// The main content of the NavigationStack
@@ -58,7 +39,8 @@ struct ContentView: View {
 			case .home:
 				HomeView()
 			case .navigationPreview:
-				NavigationPreviewView()
+				#warning("using mockup")
+				NavigationPreviewView(spot: Spot.mockup)
 			case .navigation:
 				NavigationView()
 		}
@@ -83,5 +65,6 @@ struct ContentView_Previews: PreviewProvider {
 		ContentView()
 			.environmentObject(NavigationManager())
 			.environmentObject(ScanManager())
+			.environmentObject(APIManager())
 	}
 }

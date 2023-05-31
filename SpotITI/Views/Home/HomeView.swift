@@ -14,6 +14,8 @@ struct HomeView: View {
 	@EnvironmentObject private var apiManager: APIManager
 	@EnvironmentObject private var scanManager: ScanManager
 	
+	@AppStorage("utilityDisplayMode") var utilityDisplayMode: UtilityDisplayMode = .grouped
+	
 	@State private var searchText: String = ""
 	@State private var debugActive: Bool = false
 	
@@ -29,6 +31,23 @@ struct HomeView: View {
 			.navigationTitle("SpotITI")
 			.navigationBarTitleDisplayMode(.inline)
 			.searchable(text: $searchText, prompt: "Cerca un aula")
+			.task {
+				do {
+					// Fetch spots
+					try await apiManager.getSpots()
+					
+					// Fetch utilities
+					switch utilityDisplayMode {
+						case .grouped:
+							try await apiManager.getCategories()
+						case .all:
+							// Manage single spot fetch
+							return
+					}
+				} catch {
+					print(error.localizedDescription)
+				}
+			}
 		}
 	}
 	
@@ -81,7 +100,6 @@ struct HomeView: View {
 						LazyVGrid(columns: [GridItem(.adaptive(minimum: 85), spacing: 8)], spacing: 8) {
 							ForEach(blockClassroom, id: \.name) { classroom in
 								Button {
-									navigationManager.selectedSpot = classroom
 									navigationManager.setCurrentView(view: .navigationPreview)
 									generator.impactOccurred()
 								} label: {
@@ -109,5 +127,6 @@ struct HomeView_Previews: PreviewProvider {
 		HomeView()
 			.environmentObject(NavigationManager())
 			.environmentObject(ScanManager())
+			.environmentObject(APIManager())
 	}
 }

@@ -13,7 +13,7 @@ struct Category: Codable {
 	let name: String
 	
 	var type: CategoryType {
-		// Returns the Spot category based on the id
+		// Return the Spot category based on the id
 		CategoryType.allCases.first(where: { $0.rawValue == id }) ?? .undefined
 	}
 	
@@ -59,5 +59,7 @@ struct Category: Codable {
 			}
 		}
 	}
+	
+	static let mockup = Category(id: 1, name: "classrooms")
 	
 }

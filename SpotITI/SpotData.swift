@@ -15,4 +15,12 @@ struct SpotData: Codable {
 	let is_lab: Bool
 	let pc: String?
 	
+	static let mockup = SpotData(
+		seats: "14",
+		has_iwb: true,
+		has_projector: false,
+		is_lab: false,
+		pc: "2"
+	)
+	
 }

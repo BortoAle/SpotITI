@@ -16,10 +16,12 @@ struct NavigationPreviewView: View {
 	@State var canNavigate: Bool = false
 	@State var route: Route?
 	
+	let spot: Spot
+	
 	var body: some View {
 		VStack(spacing: 32) {
 			navigationHeader
-			infoGrid
+			InfoGrid(spot: spot)
 			navigationFooter
 		}
 		.padding()
@@ -27,7 +29,7 @@ struct NavigationPreviewView: View {
 			do {
 				guard
 					let currentNodeId = scanManager.ean8Code,
-					let route = try await apiManager.getRoutes(startNodeId: currentNodeId, endSpot: navigationManager.selectedSpot!).first
+					let route = try await apiManager.getRoutes(startNodeId: currentNodeId, endSpot: spot).first
 				else {
 					canNavigate = false
 					return
@@ -40,10 +42,10 @@ struct NavigationPreviewView: View {
 		}
 	}
 
-	// Header of the navigation
+	// View header
 	var navigationHeader: some View {
 		HStack {
-			Text("Navigazione verso \(navigationManager.selectedSpot!.name)")
+			Text("Navigazione verso \(spot.name)")
 				.font(.title3)
 				.fontWeight(.semibold)
 			Spacer()
@@ -60,43 +62,8 @@ struct NavigationPreviewView: View {
 			.tint(.gray)
 		}
 	}
-
-	// Information grid
-	var infoGrid: some View {
-		Grid {
-			gridRowForHeaders
-			Divider()
-			gridRowForDetails
-		}
-	}
-
-	// Grid row for headers
-	var gridRowForHeaders: some View {
-		GridRow {
-			infoItem(image: "house.lodge", text: "Tipo")
-			infoItem(image: "chair", text: "Posti")
-			infoItem(image: "pc", text: "N° PC")
-			infoItem(image: "tv", text: "Lim")
-			infoItem(image: "videoprojector", text: "Proiettore")
-		}
-		.font(.subheadline)
-		.foregroundColor(.secondary)
-	}
 	
-	// Grid row for details
-	var gridRowForDetails: some View {
-		GridRow {
-			Text(navigationManager.selectedSpot!.data.is_lab ? "Lab" : "Aula")
-			Text(navigationManager.selectedSpot!.data.seats ?? "N/A")
-			Text(navigationManager.selectedSpot!.data.pc ?? "N/A")
-			Image(systemName: navigationManager.selectedSpot!.data.has_iwb ? "checkmark" : "xmark")
-				.foregroundColor(navigationManager.selectedSpot!.data.has_iwb ? .green : .red)
-			Image(systemName: navigationManager.selectedSpot!.data.has_projector ? "checkmark" : "xmark")
-				.foregroundColor(navigationManager.selectedSpot!.data.has_projector ? .green : .red)
-		}
-	}
-	
-	// Footer for navigation
+	// View footer
 	var navigationFooter: some View {
 		HStack {
 			PositionDotView()
@@ -145,23 +112,14 @@ struct NavigationPreviewView: View {
 		.controlSize(.mini)
 		.disabled(!canNavigate)
 	}
-	
-	// Info item for the grid
-	func infoItem(image: String, text: String) -> some View {
-		VStack {
-			Image(systemName: image)
-			Text(text)
-		}
-	}
 }
-
-// MARK: - PreviewProvider
 
 struct NavigationPreviewView_Previews: PreviewProvider {
 	static var previews: some View {
-//		NavigationPreviewView(spot: Spot(id: 1, name: "AB", category: Category(id: 0, name: "classrooms"), data: SpotData(seats: 23, has_iwb: false, has_projector: true, is_lab: false, pc: 1)))
-		NavigationPreviewView()
+		NavigationPreviewView(spot: Spot.mockup)
 			.previewLayout(.sizeThatFits)
 			.environmentObject(NavigationManager())
+			.environmentObject(ScanManager())
+			.environmentObject(APIManager())
 	}
 }

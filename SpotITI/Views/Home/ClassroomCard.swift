@@ -30,5 +30,6 @@ struct ClassroomCard: View {
 struct ClassroomCard_Previews: PreviewProvider {
     static var previews: some View {
 		ClassroomCard(name: "AB")
+			.previewLayout(.fixed(width: 85, height: 40))
     }
 }

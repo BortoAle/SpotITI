@@ -15,4 +15,12 @@ struct Spot: Codable {
 	let data: SpotData
 	let nodes: [Node]
 	
+	static let mockup = Spot(
+		id: 12345678,
+		name: "AB",
+		category: Category.mockup,
+		data: SpotData.mockup,
+		nodes: []
+	)
+	
 }
