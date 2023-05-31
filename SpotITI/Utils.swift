@@ -24,9 +24,10 @@ func playSoundAndHapticFeedback() {
 			}
 		}
 	}
-
-	
 }
+
+let generator = UIImpactFeedbackGenerator(style: .soft)
+
 
 struct DisableIdleTimer: ViewModifier {
 	let disable: Bool
@@ -48,3 +49,6 @@ extension View {
 	}
 }
 
+enum UtilityDisplayMode: String, CaseIterable {
+	case grouped, all
+}

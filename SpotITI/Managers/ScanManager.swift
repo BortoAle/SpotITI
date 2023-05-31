@@ -18,6 +18,7 @@ class ScanManager: NSObject, ObservableObject {
 	
 	override init() {
 		
+		// API key load from plist
 		guard let path = Bundle.main.path(forResource: "Secrets", ofType: "plist"),
 			  let dict = NSDictionary(contentsOfFile: path) as? [String: AnyObject],
 			  let apiKey = dict["API_KEY"] as? String else {
@@ -69,11 +70,14 @@ extension ScanManager: BarcodeCaptureListener {
 		for barcode in recognizedBarcodes where barcode.symbology == .ean8 {
 			DispatchQueue.main.async {
 				if let data = barcode.data {
+					// Id update
 					self.ean8Code = Int(data)
 				}
 			}
 		}
+		// Disable capturing after a capture
 		barcodeCapture.isEnabled = false
+		// Re-enable capture after 1 second
 		DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
 			barcodeCapture.isEnabled = true
 		}

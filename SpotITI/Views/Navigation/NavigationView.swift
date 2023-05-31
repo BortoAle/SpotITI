@@ -24,7 +24,7 @@ struct NavigationView: View {
 		}
 		.padding()
 		.onChange(of: scanManager.ean8Code!) { newValue in
-			navigationManager.updatePosition(barCodeValue: newValue)
+			navigationManager.updatePosition(barcodeValue: newValue)
 		}
 	}
 

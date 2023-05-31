@@ -8,8 +8,8 @@
 import Foundation
 
 enum SpotITIError: Error {
-	// Throw when the current position is not set
-	case noVertexSet
+	// Throw when the URL cannot be created
+	case urlError
 	// Throw when server is not responding
 	case serverError
 	// Throw in all other cases
@@ -19,8 +19,8 @@ enum SpotITIError: Error {
 extension SpotITIError: CustomStringConvertible {
 	public var description: String {
 		switch self {
-			case .noVertexSet:
-				return "No current position set"
+			case .urlError:
+				return "Cannot create an URL object"
 			case .serverError:
 				return "Server not reachable"
 			case .unexpected(let code):

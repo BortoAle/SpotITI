@@ -13,7 +13,8 @@ struct NavigationPreviewView: View {
 	@EnvironmentObject private var apiManager: APIManager
 	@EnvironmentObject private var scanManager: ScanManager
 	
-	@State var canNavigate: Bool = true
+	@State var canNavigate: Bool = false
+	@State var route: Route?
 	
 	var body: some View {
 		VStack(spacing: 32) {
@@ -22,12 +23,27 @@ struct NavigationPreviewView: View {
 			navigationFooter
 		}
 		.padding()
+		.task {
+			do {
+				guard
+					let currentNodeId = scanManager.ean8Code,
+					let route = try await apiManager.getRoutes(startNodeId: currentNodeId, endSpot: navigationManager.selectedSpot!).first
+				else {
+					canNavigate = false
+					return
+				}
+				self.route = route
+				canNavigate = true
+			} catch {
+				print(error.localizedDescription)
+			}
+		}
 	}
 
 	// Header of the navigation
 	var navigationHeader: some View {
 		HStack {
-			Text("Navigazione verso AB")
+			Text("Navigazione verso \(navigationManager.selectedSpot!.name)")
 				.font(.title3)
 				.fontWeight(.semibold)
 			Spacer()
@@ -70,13 +86,13 @@ struct NavigationPreviewView: View {
 	// Grid row for details
 	var gridRowForDetails: some View {
 		GridRow {
-			Text("LAB")
-			Text("18")
-			Text("14")
-			Image(systemName: "checkmark")
-				.foregroundColor(.green)
-			Image(systemName: "xmark")
-				.foregroundColor(.red)
+			Text(navigationManager.selectedSpot!.data.is_lab ? "Lab" : "Aula")
+			Text(navigationManager.selectedSpot!.data.seats ?? "N/A")
+			Text(navigationManager.selectedSpot!.data.pc ?? "N/A")
+			Image(systemName: navigationManager.selectedSpot!.data.has_iwb ? "checkmark" : "xmark")
+				.foregroundColor(navigationManager.selectedSpot!.data.has_iwb ? .green : .red)
+			Image(systemName: navigationManager.selectedSpot!.data.has_projector ? "checkmark" : "xmark")
+				.foregroundColor(navigationManager.selectedSpot!.data.has_projector ? .green : .red)
 		}
 	}
 	
@@ -115,14 +131,7 @@ struct NavigationPreviewView: View {
 	// Navigation button
 	var navigationButton: some View {
 		Button {
-			Task {
-				guard let currentVertexId = scanManager.ean8Code, let route = try await apiManager.getRoutes(mapId: 1, startVertexId: currentVertexId, endVertexId: 54027541).first else {
-					canNavigate = false
-					return
-				}
-				canNavigate = true
-				try await navigationManager.startNavigation(route: route)
-			}
+				navigationManager.startNavigation(route: route!)
 		} label: {
 			HStack {
 				Image(systemName: "paperplane.fill")
@@ -150,6 +159,7 @@ struct NavigationPreviewView: View {
 
 struct NavigationPreviewView_Previews: PreviewProvider {
 	static var previews: some View {
+//		NavigationPreviewView(spot: Spot(id: 1, name: "AB", category: Category(id: 0, name: "classrooms"), data: SpotData(seats: 23, has_iwb: false, has_projector: true, is_lab: false, pc: 1)))
 		NavigationPreviewView()
 			.previewLayout(.sizeThatFits)
 			.environmentObject(NavigationManager())

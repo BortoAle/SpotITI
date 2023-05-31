@@ -9,6 +9,6 @@ import Foundation
 
 enum ViewType {
 	
-	case home, detail, navigation
+	case home, navigationPreview, navigation
 	
 }

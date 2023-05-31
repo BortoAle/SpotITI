@@ -15,14 +15,13 @@ class NavigationManager: NSObject, ObservableObject, AVCaptureMetadataOutputObje
 	
 	@Published var isNavigating: Bool = false
 	var currentRoute: Route? = nil
-	var currentVertexIndex: Int? = nil
+	var currentNodeIndex: Int? = nil
 	
-	// Views properties
 	@Published var currentView: ViewType = .home
+	@Published var selectedSpot: Spot? = nil
 	@Published var selectedDetent: PresentationDetent = .large
 	@Published var presentationDetents: Set<PresentationDetent> = []
 	
-	// CompassViewModel properties
 	@Published var rotation3D: (x: CGFloat, y: CGFloat, z: CGFloat) = (0, 0, 0)
 	@Published var heading: Double = 0
 	
@@ -34,16 +33,101 @@ class NavigationManager: NSObject, ObservableObject, AVCaptureMetadataOutputObje
 	
 	override init() {
 		
-		// CompassViewModel setup
 		locationManager = CLLocationManager()
 		motionManager = CMMotionManager()
 		super.init()
 		
 		setCurrentView(view: .home)
+		setUpLocationManager()
+	}
+	
+	/// Starts navigation with a given Route
+	///  - Parameter route: the navigation route
+	func startNavigation(route: Route) {
+		currentRoute = route
+		currentNodeIndex = 0
+		isNavigating = true
+		setCurrentView(view: .navigation)
+		playSoundAndHapticFeedback()
+	}
+	
+	/// Stops navigation and returns to home screen
+	func stopNavigation() {
+		isNavigating = false
+		currentRoute = nil
+		currentNodeIndex = nil
+		setCurrentView(view: .home)
+	}
+	
+	/// Finds the new Node index in the Route nodes array given the Node id
+	/// - Parameter barcodeValue: value read by the scanner
+	func updatePosition(barcodeValue: Int) {
+		guard let route = currentRoute, let nodeIndex = route.nodes.firstIndex(where: { $0.id == barcodeValue }), nodeIndex < route.lenght - 1 else {
+			stopNavigation()
+			return
+		}
+		currentNodeIndex = nodeIndex
+		updateHeading()
+	}
+	
+	/// Changes the sheet dimensions to fit the current view shown
+	/// - Parameter view: the view type
+	func setCurrentView(view: ViewType) {
+		let viewToDetents: [ViewType: PresentationDetent] = [
+			.home: .large,
+			.navigationPreview: .fraction(0.35),
+			.navigation: .fraction(0.2)
+		]
 		
-		// CLLocationManager setup
+		guard let detent = viewToDetents[view] else { return }
+		
+		presentationDetents = [.large, .fraction(0.35), .fraction(0.2)]
+		currentView = view
+		selectedDetent = detent
+		
+		DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+			self.presentationDetents = [detent]
+		}
+	}
+	
+}
+
+extension NavigationManager {
+	
+	private func updateHeading() {
+		
+		let current = currentRoute!.nodes[currentNodeIndex!]
+		let next = currentRoute!.nodes[currentNodeIndex! + 1]
+		
+		let rotation = directionBetweenPoints(
+			current: CGPoint(x: Double(current.x), y: Double(current.y)),
+			next: CGPoint(x: Double(next.x), y: Double(next.y))
+		)
+		
+		let smallestDifference = smallestAngle(from: heading, to: rotation)
+		heading += smallestDifference
+		
+	}
+	
+	private func directionBetweenPoints(current: CGPoint, next: CGPoint) -> CLLocationDirection {
+		let deltaX = next.x - current.x
+		let deltaY = next.y - current.y
+		
+		let angleInRadians = atan2(deltaY, deltaX)
+		let angleInDegrees = angleInRadians * 180 / .pi
+		
+		return angleInDegrees
+	}
+	
+	private func smallestAngle(from angle1: Double, to angle2: Double) -> Double {
+		let difference = angle2 - angle1
+		let adjustedDifference = atan2(sin(difference * .pi / 180), cos(difference * .pi / 180))
+		return adjustedDifference * 180 / .pi
+	}
+	
+	private func setUpLocationManager() {
 		locationManager.delegate = self
-		locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation 
+		locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
 		locationManager.startUpdatingHeading()
 		
 		if motionManager.isAccelerometerAvailable {
@@ -68,95 +152,12 @@ class NavigationManager: NSObject, ObservableObject, AVCaptureMetadataOutputObje
 			}
 		}
 	}
-}
-
-extension NavigationManager {
-	
-	func getCurrentVertex() throws -> Vertex {
-		guard let vertices = currentRoute?.vertices, let index = currentVertexIndex else {
-			throw SpotITIError.noVertexSet
-		}
-		return vertices[index]
-	}
-	
-	func updatePosition(barCodeValue: Int) {
-		updateCurrentVertexIndex(barcodeValue: barCodeValue)
-		updateHeading()
-	}
-	
-	func startNavigation(route: Route) async throws {
-		currentRoute = route
-		setCurrentView(view: .navigation)
-		isNavigating = true
-		playSoundAndHapticFeedback()
-	}
-	
-	func stopNavigation() {
-		isNavigating = false
-		setCurrentView(view: .home)
-	}
-	
-	func updateCurrentVertexIndex(barcodeValue: Int) {
-		if let index = currentRoute?.vertices.firstIndex(where: { $0.id == barcodeValue }) {
-			currentVertexIndex = index
-		}
-	}
-	
-	func updateHeading() {
-		if let vertices = currentRoute?.vertices, let index = currentVertexIndex {
-
-			guard index < vertices.count-1 else {
-				return
-			}
-			
-			let currentVertex = vertices[index]
-			let nextVertex = vertices[index+1]
-			
-			rotation = directionBetweenPoints(
-				current: CGPoint(x: Double(currentVertex.x), y: Double(currentVertex.y)),
-				next: CGPoint(x: Double(nextVertex.x), y: Double(nextVertex.y))
-			)
-		}
-	}
 	
 	func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
 		DispatchQueue.main.async {
 			withAnimation {
-				#warning("rotazione anomala")
 				self.heading = newHeading.trueHeading - self.rotation
 			}
-		}
-	}
-	
-	func directionBetweenPoints(current: CGPoint, next: CGPoint) -> CLLocationDirection {
-		let deltaX = next.x - current.x
-		let deltaY = next.y - current.y
-		print(current.x)
-		print(next.x)
-		print(current.y)
-		print(next.y)
-		let angleInRadians = atan2(deltaY, deltaX)
-		let angleInDegrees = angleInRadians * 180 / .pi
-		return angleInDegrees
-		
-	}
-
-	
-	func setCurrentView(view: ViewType) {
-		let viewToDetents: [ViewType: PresentationDetent] = [
-			.home: .large,
-			.detail: .fraction(0.35),
-			.navigation: .fraction(0.2)
-		]
-		
-		guard let detent = viewToDetents[view] else { return }
-		
-		presentationDetents = [.large, .fraction(0.35), .fraction(0.2)]
-		currentView = view
-		selectedDetent = detent
-		
-		DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-			self.presentationDetents = [detent]
 		}
 	}
 	

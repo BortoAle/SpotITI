@@ -9,7 +9,7 @@ import Foundation
 
 struct Route: Codable {
 	
-	let vertices: [Vertex]
-	let cost: Int
+	let nodes: [Node]
+	let lenght: Int
 	
 }

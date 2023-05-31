@@ -10,17 +10,18 @@ import SwiftUI
 struct UtilityCard: View {
 	
 	let name: String
-	let emoji: String
+	let icon: String
 	
 	var body: some View {
 		HStack(alignment: .center, spacing: 4) {
-			Text(emoji)
+			Text(icon)
 			Text(name)
 				.font(.headline)
 				.fontWeight(.medium)
 		}
 		.padding()
 		.fixedSize(horizontal: false, vertical: true)
+		.foregroundColor(.primary)
 		.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
 		.background {
 			RoundedRectangle(cornerRadius: 8)
@@ -31,6 +32,6 @@ struct UtilityCard: View {
 
 struct UtilityCard_Previews: PreviewProvider {
     static var previews: some View {
-		UtilityCard(name: "Presidenza", emoji: "👑")
+		UtilityCard(name: "Presidenza", icon: "👑")
     }
 }
