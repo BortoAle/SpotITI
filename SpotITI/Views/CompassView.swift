@@ -14,7 +14,9 @@ import CoreHaptics
 struct CompassView: View {
 	
 	@EnvironmentObject private var navigationManager: NavigationManager
+	
 	@State private var hapticEngine: CHHapticEngine?
+	
 	let width = UIScreen.main.bounds.width
 	
 	var body: some View {
@@ -42,5 +44,13 @@ struct CompassView: View {
 				)
 				.foregroundColor(Color(uiColor: .systemBackground))
 		}
+	}
+}
+
+struct CompassView_Previews: PreviewProvider {
+	static var previews: some View {
+		CompassView()
+			.previewLayout(.sizeThatFits)
+			.environmentObject(NavigationManager())
 	}
 }

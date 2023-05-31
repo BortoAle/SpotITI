@@ -20,6 +20,8 @@ struct ClassroomCard: View {
 			.padding(.horizontal, 24)
 			.padding(.vertical, 8)
 			.frame(maxWidth: .infinity)
+			.fixedSize(horizontal: false, vertical: true)
+			.frame(minHeight: 50, maxHeight: 100)
 			.background {
 				RoundedRectangle(cornerRadius: 8)
 					.foregroundColor(Color(uiColor: .secondarySystemBackground))

@@ -13,6 +13,9 @@ struct ContentView: View {
 	@EnvironmentObject private var apiManager: APIManager
 	@EnvironmentObject var scanManager: ScanManager
 	
+	@AppStorage("showWelcomeScreen") var showWelcomeScreen: Bool = true
+	@AppStorage("utilityDisplayMode") var utilityDisplayMode: UtilityDisplayMode = .grouped
+	
 	var body: some View {
 		ZStack {
 			scannerView
@@ -22,14 +25,38 @@ struct ContentView: View {
 			}
 		}
 		.sheet(isPresented: .constant(true)) {
-			mainContentView
+			VStack {
+				if showWelcomeScreen {
+					WelcomeView()
+				} else {
+					mainContentView
+				}
+			}
 				.presentationDetents(navigationManager.presentationDetents, selection: $navigationManager.selectedDetent)
 				.presentationBackgroundInteraction(.enabled)
 				.interactiveDismissDisabled(true)
 				.presentationCornerRadius(25)
 				.presentationDragIndicator(.hidden)
 		}
+		.task {
+			do {
+				// Fetch spots
+				try await apiManager.getSpots()
+				
+				// Fetch utilities
+				switch utilityDisplayMode {
+					case .grouped:
+						try await apiManager.getCategories()
+					case .all:
+						// Manage single spot fetch
+						return
+				}
+			} catch {
+				print(error.localizedDescription)
+			}
+		}
 		.animation(.easeInOut, value: navigationManager.isNavigating)
+		.animation(.easeOut, value: showWelcomeScreen)
 	}
 	
 	// The main content of the NavigationStack

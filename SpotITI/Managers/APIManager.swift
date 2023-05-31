@@ -5,7 +5,7 @@
 //  Created by Alessandro Bortoluzzi on 14/05/23.
 //
 
-import Foundation
+import SwiftUI
 
 class APIManager: ObservableObject {
 	
@@ -27,7 +27,9 @@ class APIManager: ObservableObject {
 		classrooms.sort(by: { $0.name < $1.name })
 		
 		// Categorizes the classrooms
-		self.classrooms = categorizeClassrooms(classrooms: spots)
+		withAnimation {
+			self.classrooms = categorizeClassrooms(classrooms: spots)
+		}
 	}
 	
 	/// Fetches available categories from the server and filters out the utilities.
@@ -40,7 +42,9 @@ class APIManager: ObservableObject {
 		let categories: [Category] = try await fetchData(url: url)
 		
 		// Filters the utilities from the classrooms
-		self.categories = categories.filter({ $0.type.isUtility })
+		withAnimation {
+			self.categories = categories.filter({ $0.type.isUtility })
+		}
 	}
 	
 	/// Fetches routes between the provided start and end node ids from the server.

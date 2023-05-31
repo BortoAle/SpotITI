@@ -14,10 +14,7 @@ struct HomeView: View {
 	@EnvironmentObject private var apiManager: APIManager
 	@EnvironmentObject private var scanManager: ScanManager
 	
-	@AppStorage("utilityDisplayMode") var utilityDisplayMode: UtilityDisplayMode = .grouped
-	
 	@State private var searchText: String = ""
-	@State private var debugActive: Bool = false
 	
 	var body: some View {
 		NavigationStack {
@@ -31,32 +28,6 @@ struct HomeView: View {
 			.navigationTitle("SpotITI")
 			.navigationBarTitleDisplayMode(.inline)
 			.searchable(text: $searchText, prompt: "Cerca un aula")
-			.task {
-				do {
-					// Fetch spots
-					try await apiManager.getSpots()
-					
-					// Fetch utilities
-					switch utilityDisplayMode {
-						case .grouped:
-							try await apiManager.getCategories()
-						case .all:
-							// Manage single spot fetch
-							return
-					}
-				} catch {
-					print(error.localizedDescription)
-				}
-			}
-		}
-	}
-	
-	// Toolbar content for the debug mode
-	var debugToolbarContent: some View {
-		Button {
-			debugActive.toggle()
-		} label: {
-			Image(systemName: "ladybug")
 		}
 	}
 	

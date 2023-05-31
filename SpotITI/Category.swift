@@ -43,7 +43,7 @@ struct Category: Codable {
 				case .bathroom:
 					return "🚻"
 				case .machines:
-					return "🍪"
+					return "🧃"
 				case .undefined:
 					return ""
 			}
