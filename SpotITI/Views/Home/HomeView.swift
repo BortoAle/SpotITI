@@ -14,6 +14,7 @@ struct HomeView: View {
 	@EnvironmentObject private var apiManager: APIManager
 	@EnvironmentObject private var scanManager: ScanManager
 	
+	@Binding var selectedSpot: Spot?
 	@State private var searchText: String = ""
 	
 	var body: some View {
@@ -33,44 +34,45 @@ struct HomeView: View {
 	
 	// Section for utilities
 	var utilitySection: some View {
-			Section {
-				LazyVGrid(columns: [GridItem(.adaptive(minimum: 150))]) {
-					ForEach(apiManager.categories, id: \.id) { category in
-						Button {
-							Task {
-								if let currentNodeId = scanManager.ean8Code {
-									do {
-										if let route = try await apiManager.getRoutes(startNodeId: currentNodeId, endCategory: category.type).first {
-											navigationManager.startNavigation(route: route)
-										}
-									} catch {
-										print(error.localizedDescription)
+		Section {
+			LazyVGrid(columns: [GridItem(.adaptive(minimum: 150))]) {
+				ForEach(categoriesSearchResults(categories: apiManager.categories), id: \.id) { category in
+					Button {
+						Task {
+							if let currentNodeId = scanManager.ean8Code {
+								do {
+									if let route = try await apiManager.getRoutes(startNodeId: currentNodeId, endCategory: category.type).first {
+										navigationManager.startNavigation(route: route)
 									}
+								} catch {
+									print(error.localizedDescription)
 								}
 							}
-							print("Tapped")
-						} label: {
-							UtilityCard(name: category.type.name, icon: category.type.icon)
 						}
-
+						print("Tapped")
+					} label: {
+						UtilityCard(name: category.type.name, icon: category.type.icon)
 					}
+					
 				}
-			} header: {
-				Text("Utilità")
-					.font(.headline)
 			}
+		} header: {
+			Text("Utilità")
+				.font(.headline)
+		}
 	}
 	
 	var classroomsSection: some View {
 		// Classrooms section
 		Section {
-			ForEach(Array(apiManager.classrooms.keys.sorted(by: { $0 < $1 })), id: \.hashValue) { block in
+			ForEach(blockSearchResults(blocks: Array(apiManager.classrooms.keys.sorted(by: { $0 < $1 }))), id: \.hashValue) { block in
 				// Block section
 				Section {
 					if let blockClassroom = apiManager.classrooms[block] {
 						LazyVGrid(columns: [GridItem(.adaptive(minimum: 85), spacing: 8)], spacing: 8) {
-							ForEach(blockClassroom, id: \.name) { classroom in
+							ForEach(classroomsSearchResults(classrooms: blockClassroom), id: \.name) { classroom in
 								Button {
+									selectedSpot = classroom
 									navigationManager.setCurrentView(view: .navigationPreview)
 									generator.impactOccurred()
 								} label: {
@@ -91,11 +93,36 @@ struct HomeView: View {
 		}
 	}
 	
+	func categoriesSearchResults(categories: [Category]) -> [Category] {
+		if searchText.isEmpty {
+			return categories
+		} else {
+			return categories.filter({ $0.name.lowercased().contains(searchText.lowercased()) })
+		}
+	}
+	
+	func blockSearchResults(blocks: [Character]) -> [Character] {
+		if searchText.isEmpty {
+			return blocks
+		} else {
+			return blocks.filter({ $0.lowercased().contains(searchText.lowercased()) })
+		}
+	}
+	
+	
+	func classroomsSearchResults(classrooms: [Spot]) -> [Spot] {
+		if searchText.isEmpty {
+			return classrooms
+		} else {
+			return classrooms.filter({ $0.name.lowercased().contains(searchText.lowercased()) })
+		}
+	}
+	
 }
 
 struct HomeView_Previews: PreviewProvider {
 	static var previews: some View {
-		HomeView()
+		HomeView(selectedSpot: .constant(Spot.mockup))
 			.environmentObject(NavigationManager())
 			.environmentObject(ScanManager())
 			.environmentObject(APIManager())

@@ -146,24 +146,24 @@
 		6A805F2F2A0D491B00CAC807 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				6A1D6D3D2A27B4E700FD90CE /* Welcome */,
 				6AFD7B572A0FF1FE00B52A9C /* ScannerView.swift */,
 				6AB4149529FACA26002F8387 /* CompassView.swift */,
 				6AFD7B492A0F8DC800B52A9C /* PositionDotView.swift */,
+				6A1D6D3D2A27B4E700FD90CE /* Welcome */,
 				6AF3342929C3B0A600C97CB0 /* Home */,
-				6A805F302A0D492F00CAC807 /* ClassroomDetail */,
+				6A805F302A0D492F00CAC807 /* NavigationPreview */,
 				6A805F332A0D497F00CAC807 /* Navigation */,
 			);
 			path = Views;
 			sourceTree = "<group>";
 		};
-		6A805F302A0D492F00CAC807 /* ClassroomDetail */ = {
+		6A805F302A0D492F00CAC807 /* NavigationPreview */ = {
 			isa = PBXGroup;
 			children = (
 				6A805F312A0D496900CAC807 /* NavigationPreviewView.swift */,
 				6A1D6D3B2A27A7EF00FD90CE /* InfoGrid.swift */,
 			);
-			path = ClassroomDetail;
+			path = NavigationPreview;
 			sourceTree = "<group>";
 		};
 		6A805F332A0D497F00CAC807 /* Navigation */ = {

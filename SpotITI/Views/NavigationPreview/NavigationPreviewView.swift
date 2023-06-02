@@ -25,6 +25,7 @@ struct NavigationPreviewView: View {
 			navigationFooter
 		}
 		.padding()
+		.animation(.easeInOut, value: canNavigate)
 		.task {
 			do {
 				guard
@@ -68,10 +69,13 @@ struct NavigationPreviewView: View {
 		HStack {
 			PositionDotView()
 			HStack(spacing: 16) {
-				navigationInfo
+				if canNavigate {
+					navigationInfo
+						.padding(.trailing, 24)
+						.transition(.move(edge: .trailing))
+				}
 				navigationButton
 			}
-			.padding(.leading, 24)
 			.background {
 				Capsule()
 					.foregroundColor(Color(uiColor: .secondarySystemBackground))
@@ -84,11 +88,11 @@ struct NavigationPreviewView: View {
 	// Navigation info
 	var navigationInfo: some View {
 		HStack(spacing: 4) {
-			Text("2") +
+			Text(route?.lenght ?? 0, format: .number) +
 			Text("min")
 				.foregroundColor(.secondary)
 			Text("•")
-			Text("250") +
+			Text(route?.lenght ?? 0, format: .number) +
 			Text("m")
 				.foregroundColor(.secondary)
 		}

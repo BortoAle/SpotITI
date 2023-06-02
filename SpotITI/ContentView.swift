@@ -16,6 +16,8 @@ struct ContentView: View {
 	@AppStorage("showWelcomeScreen") var showWelcomeScreen: Bool = true
 	@AppStorage("utilityDisplayMode") var utilityDisplayMode: UtilityDisplayMode = .grouped
 	
+	@State var selectedSpot: Spot?
+	
 	var body: some View {
 		ZStack {
 			scannerView
@@ -33,7 +35,7 @@ struct ContentView: View {
 				}
 			}
 				.presentationDetents(navigationManager.presentationDetents, selection: $navigationManager.selectedDetent)
-				.presentationBackgroundInteraction(.enabled)
+				.presentationBackgroundInteraction(.disabled)
 				.interactiveDismissDisabled(true)
 				.presentationCornerRadius(25)
 				.presentationDragIndicator(.hidden)
@@ -64,10 +66,9 @@ struct ContentView: View {
 	var mainContentView: some View {
 		switch navigationManager.currentView {
 			case .home:
-				HomeView()
+				HomeView(selectedSpot: $selectedSpot)
 			case .navigationPreview:
-				#warning("using mockup")
-				NavigationPreviewView(spot: Spot.mockup)
+				NavigationPreviewView(spot: selectedSpot!)
 			case .navigation:
 				NavigationView()
 		}

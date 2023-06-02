@@ -56,7 +56,7 @@ class ScanManager: NSObject, ObservableObject {
 		let overlay = BarcodeCaptureOverlay(barcodeCapture: barcodeCapture)
 		captureView.addOverlay(overlay)
 		
-		barcodeCapture.feedback.success = Feedback(vibration: nil,sound: .default)
+		barcodeCapture.feedback.success = Feedback(vibration: nil,sound: .none)
 		
 		// Scart scanning
 		barcodeCapture.isEnabled = true
