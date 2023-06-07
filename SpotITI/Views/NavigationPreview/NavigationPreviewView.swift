@@ -26,21 +26,7 @@ struct NavigationPreviewView: View {
 		}
 		.padding()
 		.animation(.easeInOut, value: canNavigate)
-		.task {
-			do {
-				guard
-					let currentNodeId = scanManager.ean8Code,
-					let route = try await apiManager.getRoutes(startNodeId: currentNodeId, endSpot: spot).first
-				else {
-					canNavigate = false
-					return
-				}
-				self.route = route
-				canNavigate = true
-			} catch {
-				print(error.localizedDescription)
-			}
-		}
+		.task { await fetchRoute() }
 	}
 
 	// View header
@@ -116,6 +102,23 @@ struct NavigationPreviewView: View {
 		.controlSize(.mini)
 		.disabled(!canNavigate)
 	}
+	
+	func fetchRoute() async {
+		do {
+			guard let currentNodeId = scanManager.ean8Code else {
+				await MainActor.run { canNavigate = false }
+				return
+			}
+			let result = try await apiManager.getRoutes(startNodeId: currentNodeId, endSpot: spot)
+			await MainActor.run {
+				self.route = result
+				canNavigate = true
+			}
+		} catch {
+			print(error.localizedDescription)
+		}
+	}
+	
 }
 
 struct NavigationPreviewView_Previews: PreviewProvider {

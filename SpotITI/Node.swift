@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Node: Codable {
+struct Node: Codable, Equatable {
 	
 	let id: Int
 	let x: Float

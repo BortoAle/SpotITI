@@ -22,8 +22,12 @@ class NavigationManager: NSObject, ObservableObject, AVCaptureMetadataOutputObje
 	// The current active route for navigation
 	var currentRoute: Route? = nil
 	
-	// Index for current node in the route
-	var currentNodeIndex: Int? = nil
+	var currentNode: Node? {
+		didSet {
+			updateNextNode()
+		}
+	}
+	var nextNode: Node?
 	
 	// Sheet dimension management
 	@Published var currentView: ViewType = .home
@@ -62,7 +66,8 @@ class NavigationManager: NSObject, ObservableObject, AVCaptureMetadataOutputObje
 	/// - Parameter route: The route object to be followed during the navigation.
 	func startNavigation(route: Route) {
 		currentRoute = route
-		currentNodeIndex = 0
+		currentNode = route.nodes.first
+		self.rotation = directionBetweenPoints(current: CGPoint(x: Double(currentNode!.x), y: Double(currentNode!.y)), next: CGPoint(x: 0, y: 1000))
 		isNavigating = true
 		setCurrentView(view: .navigation)
 		playSoundAndHapticFeedback()
@@ -75,7 +80,8 @@ class NavigationManager: NSObject, ObservableObject, AVCaptureMetadataOutputObje
 	func stopNavigation() {
 		isNavigating = false
 		currentRoute = nil
-		currentNodeIndex = nil
+		currentNode = nil
+		nextNode = nil
 		setCurrentView(view: .home)
 	}
 	
@@ -88,12 +94,12 @@ class NavigationManager: NSObject, ObservableObject, AVCaptureMetadataOutputObje
 	///
 	/// - Parameter barcodeValue: The barcode value that was scanned, representing a node id in the current route.
 	func updatePosition(barcodeValue: Int) {
-		guard let route = currentRoute, let nodeIndex = route.nodes.firstIndex(where: { $0.id == barcodeValue }), nodeIndex < route.lenght - 1 else {
+		guard let route = currentRoute, let node = route.nodes.first(where: { $0.id == barcodeValue }) else {
 			stopNavigation()
 			return
 		}
 		playSoundAndHapticFeedback()
-		currentNodeIndex = nodeIndex
+		currentNode = node
 		updateHeading()
 	}
 	
@@ -121,6 +127,21 @@ class NavigationManager: NSObject, ObservableObject, AVCaptureMetadataOutputObje
 		}
 	}
 	
+	private func updateNextNode() {
+		guard let route = currentRoute, let currentNode = currentNode, let currentIndex = route.nodes.firstIndex(of: currentNode) else {
+			nextNode = nil
+			return
+		}
+		
+		let nextIndex = currentIndex + 1
+		if nextIndex < route.nodes.count {
+			nextNode = route.nodes[nextIndex]
+		} else {
+			// We're at the last node, so there's no next node
+			stopNavigation()
+		}
+	}
+	
 }
 
 extension NavigationManager {
@@ -135,18 +156,14 @@ extension NavigationManager {
 	///
 	/// - Note: This method assumes the existence of a 'next' node in the route.
 	private func updateHeading() {
-		
-		let current = currentRoute!.nodes[currentNodeIndex!]
-		let next = currentRoute!.nodes[currentNodeIndex! + 1]
+		guard let currentNode = currentNode, let nextNode = nextNode else { return }
 		
 		let rotation = directionBetweenPoints(
-			current: CGPoint(x: Double(current.x), y: Double(current.y)),
-			next: CGPoint(x: Double(next.x), y: Double(next.y))
+			current: CGPoint(x: Double(currentNode.x), y: Double(currentNode.y)),
+			next: CGPoint(x: Double(nextNode.x), y: Double(nextNode.y))
 		)
 		
-		let smallestDifference = smallestAngle(from: heading, to: rotation)
-		heading += smallestDifference
-		
+		self.rotation = rotation
 	}
 	
 	/// Returns the direction from a current point to a next point.
@@ -164,11 +181,15 @@ extension NavigationManager {
 		let deltaX = next.x - current.x
 		let deltaY = next.y - current.y
 		
-		let angleInRadians = atan2(deltaY, deltaX)
+		// atan2(y, x) gives the angle in radians between the x-axis and the point (x, y)
+		let angleInRadians = atan2(deltaX, deltaY)
+		
+		// Convert radians to degrees because CLLocationDirection is in degrees
 		let angleInDegrees = angleInRadians * 180 / .pi
 		
 		return angleInDegrees
 	}
+
 	
 	/// Returns the smallest angle (in degrees) between two given angles.
 	///
@@ -184,7 +205,10 @@ extension NavigationManager {
 	/// - Returns: The smallest difference between the two angles in degrees.
 	private func smallestAngle(from angle1: Double, to angle2: Double) -> Double {
 		let difference = angle2 - angle1
+		
+		// atan2(sin(difference), cos(difference)) normalizes the angle difference to the range -π to π (-180 to 180 degrees)
 		let adjustedDifference = atan2(sin(difference * .pi / 180), cos(difference * .pi / 180))
+		
 		return adjustedDifference * 180 / .pi
 	}
 	
@@ -219,7 +243,13 @@ extension NavigationManager {
 	func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
 		DispatchQueue.main.async {
 			withAnimation {
-				self.heading = newHeading.trueHeading - self.rotation
+				let newRotation = newHeading.trueHeading + self.rotation + 30
+//				self.heading += self.smallestAngle(from: self.heading, to: newRotation)
+				self.heading = newRotation
+				
+				print("heading: \(self.heading)")
+				print("new Heading: \(newHeading.trueHeading)")
+				print("rotation: \(self.rotation)")
 			}
 		}
 	}

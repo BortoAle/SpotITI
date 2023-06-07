@@ -17,7 +17,6 @@ class APIManager: ObservableObject {
 	///
 	/// This asynchronous method fetches the available spots from the server, filters out utilities from the spots to get the classrooms,
 	/// and categorizes these classrooms.
-	@MainActor
 	func getSpots() async throws {
 		let url = "https://bussola.voceaglistudenti.ml/spots"
 		let spots: [Spot] = try await fetchData(url: url)
@@ -26,24 +25,27 @@ class APIManager: ObservableObject {
 		var classrooms = spots.filter({ !$0.category.type.isUtility })
 		classrooms.sort(by: { $0.name < $1.name })
 		
-		// Categorizes the classrooms
-		withAnimation {
-			self.classrooms = categorizeClassrooms(classrooms: spots)
+		await MainActor.run {
+			// Categorizes the classrooms
+			withAnimation {
+				self.classrooms = categorizeClassrooms(classrooms: spots)
+			}
 		}
 	}
 	
 	/// Fetches available categories from the server and filters out the utilities.
 	///
 	/// This asynchronous method fetches the available categories from the server and filters out utilities to get the needed categories.
-	@MainActor
 	func getCategories() async throws {
 		let url = "https://bussola.voceaglistudenti.ml/categories"
 		
 		let categories: [Category] = try await fetchData(url: url)
 		
-		// Filters the utilities from the classrooms
-		withAnimation {
-			self.categories = categories.filter({ $0.type.isUtility })
+		await MainActor.run {
+			// Filters the utilities from the classrooms
+			withAnimation {
+				self.categories = categories.filter({ $0.type.isUtility })
+			}
 		}
 	}
 	
@@ -55,7 +57,7 @@ class APIManager: ObservableObject {
 	/// 	- startNodeId: The Node id where the user is positioned.
 	/// 	- endNodeId: The destination Node id.
 	func getRoutes(startNodeId: Int, endNodeId: Int) async throws -> [Route] {
-		let url = "https://bussola.voceaglistudenti.ml/routes/\(startNodeId)/\(endNodeId)"
+		let url = "https://bussola.voceaglistudenti.ml/route/\(startNodeId)/\(endNodeId)"
 		return try await fetchData(url: url)
 	}
 	
@@ -66,9 +68,13 @@ class APIManager: ObservableObject {
 	/// - Parameters:
 	/// 	- startNodeId: The Node id where the user is positioned.
 	/// 	- endSpot: The destination Spot.
-	func getRoutes(startNodeId: Int, endSpot: Spot) async throws -> [Route] {
-		let url = "https://bussola.voceaglistudenti.ml/routes/\(startNodeId)/spot/\(endSpot.id)"
-		return try await fetchData(url: url)
+	func getRoutes(startNodeId: Int, endSpot: Spot) async throws -> Route {
+		guard let url = URL(string: "https://bussola.voceaglistudenti.ml/route/\(startNodeId)/spot/\(endSpot.id)") else {
+			throw SpotITIError.urlError
+		}
+		let (data, _) = try await URLSession.shared.data(from: url)
+		let route = try JSONDecoder().decode(Route.self, from: data)
+		return route
 	}
 	
 	/// Fetches routes between the provided start node id and the destination Category from the server.
@@ -79,7 +85,7 @@ class APIManager: ObservableObject {
 	/// 	- startNodeId: The Node id where the user is positioned.
 	/// 	- endCategory: The destination Category.
 	func getRoutes(startNodeId: Int, endCategory: Category.CategoryType) async throws -> [Route] {
-		let url = "https://bussola.voceaglistudenti.ml/routes/\(startNodeId)/category/\(endCategory.name)"
+		let url = "https://bussola.voceaglistudenti.ml/route/\(startNodeId)/category/\(endCategory.name)"
 		return try await fetchData(url: url)
 	}
 	
