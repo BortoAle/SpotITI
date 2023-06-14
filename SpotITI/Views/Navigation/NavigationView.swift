@@ -24,7 +24,6 @@ struct NavigationView: View {
 		}
 		.padding()
 		.onChange(of: scanManager.ean8Code ?? 0) { newValue in
-		#warning("se non funziona controllare default value 0")
 			navigationManager.updatePosition(barcodeValue: newValue)
 		}
 	}

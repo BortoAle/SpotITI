@@ -74,11 +74,11 @@ struct NavigationPreviewView: View {
 	// Navigation info
 	var navigationInfo: some View {
 		HStack(spacing: 4) {
-			Text(route?.lenght ?? 0, format: .number) +
+			Text(Double(route?.lenght ?? 0)/25 * 1.3 / 60, format: .number) +
 			Text("min")
 				.foregroundColor(.secondary)
 			Text("•")
-			Text(route?.lenght ?? 0, format: .number) +
+			Text((route?.lenght ?? 0)/25, format: .number) +
 			Text("m")
 				.foregroundColor(.secondary)
 		}

@@ -27,7 +27,7 @@ struct CompassView: View {
 				.frame(width: width/2)
 				.fontWeight(.black)
 				.foregroundColor(Color(uiColor: .secondarySystemBackground))
-				.rotationEffect(.degrees(-navigationManager.heading))
+				.rotationEffect(.degrees(navigationManager.heading))
 				.rotation3DEffect(
 					.degrees(navigationManager.rotation3D.x),
 					axis: (x: 1, y: 0, z: 0),

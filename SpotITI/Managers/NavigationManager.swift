@@ -17,10 +17,10 @@ class NavigationManager: NSObject, ObservableObject, AVCaptureMetadataOutputObje
 	@Published var isNavigating: Bool = false
 	
 	// The spot selected by the user
-	@Published var selectedSpot: Spot? = nil
+	@Published var selectedSpot: Spot?
 	
 	// The current active route for navigation
-	var currentRoute: Route? = nil
+	var currentRoute: Route?
 	
 	var currentNode: Node? {
 		didSet {
@@ -67,7 +67,7 @@ class NavigationManager: NSObject, ObservableObject, AVCaptureMetadataOutputObje
 	func startNavigation(route: Route) {
 		currentRoute = route
 		currentNode = route.nodes.first
-		self.rotation = directionBetweenPoints(current: CGPoint(x: Double(currentNode!.x), y: Double(currentNode!.y)), next: CGPoint(x: 0, y: 1000))
+		updateHeading()
 		isNavigating = true
 		setCurrentView(view: .navigation)
 		playSoundAndHapticFeedback()
@@ -94,12 +94,15 @@ class NavigationManager: NSObject, ObservableObject, AVCaptureMetadataOutputObje
 	///
 	/// - Parameter barcodeValue: The barcode value that was scanned, representing a node id in the current route.
 	func updatePosition(barcodeValue: Int) {
+		print("barcode: \(barcodeValue)")
 		guard let route = currentRoute, let node = route.nodes.first(where: { $0.id == barcodeValue }) else {
 			stopNavigation()
 			return
-		}
+			}
 		playSoundAndHapticFeedback()
 		currentNode = node
+		print("current \(currentNode!.id)")
+		print("next \(nextNode!.id)")
 		updateHeading()
 	}
 	
@@ -156,7 +159,10 @@ extension NavigationManager {
 	///
 	/// - Note: This method assumes the existence of a 'next' node in the route.
 	private func updateHeading() {
-		guard let currentNode = currentNode, let nextNode = nextNode else { return }
+		guard let currentNode = self.currentNode, let nextNode = self.nextNode else {
+			fatalError("Problemino")
+			return
+		}
 		
 		let rotation = directionBetweenPoints(
 			current: CGPoint(x: Double(currentNode.x), y: Double(currentNode.y)),
@@ -179,13 +185,17 @@ extension NavigationManager {
 	/// - Returns: The direction from the current point to the next point, in degrees.
 	private func directionBetweenPoints(current: CGPoint, next: CGPoint) -> CLLocationDirection {
 		let deltaX = next.x - current.x
-		let deltaY = next.y - current.y
+		let deltaY = -next.y + current.y
 		
-		// atan2(y, x) gives the angle in radians between the x-axis and the point (x, y)
+		print("deltaX: \(deltaX), deltaY: \(deltaY)")
+		
+		// atan2(x, y) gives the angle in radians between the y-axis and the point (x, y)
 		let angleInRadians = atan2(deltaX, deltaY)
 		
 		// Convert radians to degrees because CLLocationDirection is in degrees
 		let angleInDegrees = angleInRadians * 180 / .pi
+		
+		print("rotation \(angleInDegrees)")
 		
 		return angleInDegrees
 	}
@@ -243,13 +253,8 @@ extension NavigationManager {
 	func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
 		DispatchQueue.main.async {
 			withAnimation {
-				let newRotation = newHeading.trueHeading + self.rotation + 30
-//				self.heading += self.smallestAngle(from: self.heading, to: newRotation)
-				self.heading = newRotation
-				
-				print("heading: \(self.heading)")
-				print("new Heading: \(newHeading.trueHeading)")
-				print("rotation: \(self.rotation)")
+				let newRotation = -newHeading.trueHeading + self.rotation + 45
+				self.heading += self.smallestAngle(from: self.heading, to: newRotation)
 			}
 		}
 	}
