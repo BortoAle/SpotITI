@@ -12,6 +12,7 @@ struct ContentView: View {
 	@EnvironmentObject private var navigationManager: NavigationManager
 	@EnvironmentObject private var apiManager: APIManager
 	@EnvironmentObject var scanManager: ScanManager
+    @EnvironmentObject var appScreen: AppScreen
 	
 	@AppStorage("showWelcomeScreen") var showWelcomeScreen: Bool = true
 	@AppStorage("utilityDisplayMode") var utilityDisplayMode: UtilityDisplayMode = .grouped
@@ -34,7 +35,7 @@ struct ContentView: View {
 					mainContentView
 				}
 			}
-				.presentationDetents(navigationManager.presentationDetents, selection: $navigationManager.selectedDetent)
+				.presentationDetents(appScreen.presentationDetents, selection: $appScreen.selectedDetent)
 				.presentationBackgroundInteraction(.disabled)
 				.interactiveDismissDisabled(true)
 				.presentationCornerRadius(25)
@@ -64,7 +65,7 @@ struct ContentView: View {
 	// The main content of the NavigationStack
 	@ViewBuilder
 	var mainContentView: some View {
-		switch navigationManager.currentView {
+		switch appScreen.currentView {
 			case .home:
 				HomeView(selectedSpot: $selectedSpot)
 			case .navigationPreview:
@@ -94,5 +95,6 @@ struct ContentView_Previews: PreviewProvider {
 			.environmentObject(NavigationManager())
 			.environmentObject(ScanManager())
 			.environmentObject(APIManager())
+            .environmentObject(AppScreen())
 	}
 }

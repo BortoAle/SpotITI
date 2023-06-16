@@ -17,8 +17,8 @@ struct ScannerView: UIViewRepresentable {
 		let captureView = DataCaptureView(context: scanner.dataCaptureContext, frame: .zero)
 		
 		// Create and add the overlay
-//		let overlay = BarcodeCaptureOverlay(barcodeCapture: scanner.barcodeCapture)
-//		captureView.addOverlay(overlay)
+		let overlay = BarcodeCaptureOverlay(barcodeCapture: scanner.barcodeCapture)
+		captureView.addOverlay(overlay)
 		
 		return captureView
 	}

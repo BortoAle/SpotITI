@@ -119,7 +119,7 @@ class APIManager: ObservableObject {
 	/// This asynchronous method fetches data from the server at the specified URL and decodes it into the provided generic type `T`.
 	///
 	/// - Parameter url: The URL string from where data should be fetched.
-	func fetchData<T: Codable>(url: String) async throws -> [T] {
+	private func fetchData<T: Codable>(url: String) async throws -> [T] {
 		guard let url = URL(string: url) else {
 			throw SpotITIError.urlError
 		}

@@ -29,11 +29,6 @@ class NavigationManager: NSObject, ObservableObject, AVCaptureMetadataOutputObje
 	}
 	var nextNode: Node?
 	
-	// Sheet dimension management
-	@Published var currentView: ViewType = .home
-	@Published var selectedDetent: PresentationDetent = .large
-	@Published var presentationDetents: Set<PresentationDetent> = []
-	
 	// 3D rotation values for the user compass
 	@Published var rotation3D: (x: CGFloat, y: CGFloat, z: CGFloat) = (0, 0, 0)
 	
@@ -48,12 +43,9 @@ class NavigationManager: NSObject, ObservableObject, AVCaptureMetadataOutputObje
 	private var motionManager: CMMotionManager
 	
 	override init() {
-		
 		locationManager = CLLocationManager()
 		motionManager = CMMotionManager()
 		super.init()
-		
-		setCurrentView(view: .home)
 		setUpLocationManager()
 	}
 	
@@ -65,12 +57,10 @@ class NavigationManager: NSObject, ObservableObject, AVCaptureMetadataOutputObje
 	///
 	/// - Parameter route: The route object to be followed during the navigation.
 	func startNavigation(route: Route) {
+        isNavigating = true
 		currentRoute = route
 		currentNode = route.nodes.first
 		updateHeading()
-		isNavigating = true
-		setCurrentView(view: .navigation)
-		playSoundAndHapticFeedback()
 	}
 	
 	/// Stops the navigation process and returns to the home screen.
@@ -82,7 +72,6 @@ class NavigationManager: NSObject, ObservableObject, AVCaptureMetadataOutputObje
 		currentRoute = nil
 		currentNode = nil
 		nextNode = nil
-		setCurrentView(view: .home)
 	}
 	
 	/// Updates the current position in the navigation route using the scanned barcode value.
@@ -98,7 +87,7 @@ class NavigationManager: NSObject, ObservableObject, AVCaptureMetadataOutputObje
 		guard let route = currentRoute, let node = route.nodes.first(where: { $0.id == barcodeValue }) else {
 			stopNavigation()
 			return
-			}
+        }
 		playSoundAndHapticFeedback()
 		currentNode = node
 		print("current \(currentNode!.id)")
@@ -106,48 +95,31 @@ class NavigationManager: NSObject, ObservableObject, AVCaptureMetadataOutputObje
 		updateHeading()
 	}
 	
-	/// Adjusts the size of the view sheet to match the size requirements of the current view.
-	///
-	/// This method is used to set the current view to a specified view type, and adjusts the size of the sheet
-	/// to fit that view type. The size is defined by the detent associated with the specified view type.
-	///
-	/// - Parameter view: The view type that should be set as the current view.
-	func setCurrentView(view: ViewType) {
-		let viewToDetents: [ViewType: PresentationDetent] = [
-			.home: .large,
-			.navigationPreview: .fraction(0.35),
-			.navigation: .fraction(0.2)
-		]
-		
-		guard let detent = viewToDetents[view] else { return }
-		
-		presentationDetents = [.large, .fraction(0.35), .fraction(0.2)]
-		currentView = view
-		selectedDetent = detent
-		
-		DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-			self.presentationDetents = [detent]
-		}
-	}
-	
-	private func updateNextNode() {
-		guard let route = currentRoute, let currentNode = currentNode, let currentIndex = route.nodes.firstIndex(of: currentNode) else {
-			nextNode = nil
-			return
-		}
-		
-		let nextIndex = currentIndex + 1
-		if nextIndex < route.nodes.count {
-			nextNode = route.nodes[nextIndex]
-		} else {
-			// We're at the last node, so there's no next node
-			stopNavigation()
-		}
-	}
-	
 }
 
 extension NavigationManager {
+    
+    /// Updates the next node in the current route based on the current node.
+    ///
+    /// This method is called when the current node changes. If the current node is not the last node in the route,
+    /// the next node is set to the node following the current node in the route's node array.
+    /// If the current node is the last node in the route, the navigation is stopped and the next node is set to `nil`.
+    ///
+    /// This method should be used whenever the current node updates to ensure that the next node is always correct.
+    private func updateNextNode() {
+        guard let route = currentRoute, let currentNode = currentNode, let currentIndex = route.nodes.firstIndex(of: currentNode) else {
+            nextNode = nil
+            return
+        }
+        
+        let nextIndex = currentIndex + 1
+        if nextIndex < route.nodes.count {
+            nextNode = route.nodes[nextIndex]
+        } else {
+            // We're at the last node, so there's no next node
+            stopNavigation()
+        }
+    }
 	
 	/// Updates the heading of the current navigation path.
 	///
@@ -160,8 +132,7 @@ extension NavigationManager {
 	/// - Note: This method assumes the existence of a 'next' node in the route.
 	private func updateHeading() {
 		guard let currentNode = self.currentNode, let nextNode = self.nextNode else {
-			fatalError("Problemino")
-			return
+			fatalError("currentNode and nextNode must exist")
 		}
 		
 		let rotation = directionBetweenPoints(

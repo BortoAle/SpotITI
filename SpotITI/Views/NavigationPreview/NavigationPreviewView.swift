@@ -12,6 +12,7 @@ struct NavigationPreviewView: View {
 	@EnvironmentObject private var navigationManager: NavigationManager
 	@EnvironmentObject private var apiManager: APIManager
 	@EnvironmentObject private var scanManager: ScanManager
+    @EnvironmentObject private var appScreen: AppScreen
 	
 	@State var canNavigate: Bool = false
 	@State var route: Route?
@@ -37,7 +38,7 @@ struct NavigationPreviewView: View {
 				.fontWeight(.semibold)
 			Spacer()
 			Button {
-				navigationManager.setCurrentView(view: .home)
+				appScreen.setCurrentView(view: .home)
 			} label: {
 				Image(systemName: "xmark")
 					.padding(8)
@@ -53,7 +54,7 @@ struct NavigationPreviewView: View {
 	// View footer
 	var navigationFooter: some View {
 		HStack {
-			PositionDotView()
+//			PositionDotView()
 			HStack(spacing: 16) {
 				if canNavigate {
 					navigationInfo
@@ -89,6 +90,7 @@ struct NavigationPreviewView: View {
 	var navigationButton: some View {
 		Button {
 				navigationManager.startNavigation(route: route!)
+                appScreen.setCurrentView(view: .navigation)
 		} label: {
 			HStack {
 				Image(systemName: "paperplane.fill")

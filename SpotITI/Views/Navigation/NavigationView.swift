@@ -12,6 +12,7 @@ struct NavigationView: View {
 	@EnvironmentObject var navigationManager: NavigationManager
 	@EnvironmentObject var scanManager: ScanManager
 	@EnvironmentObject var apiManager: APIManager
+    @EnvironmentObject private var appScreen: AppScreen
 
 	private let buttonColor: Color = .red
 	private let capsuleColor: Color = Color(uiColor: .secondarySystemBackground)
@@ -41,7 +42,7 @@ struct NavigationView: View {
 
 	var progressView: some View {
 		HStack {
-			PositionDotView()
+//			PositionDotView()
 			progressDetailsView
 		}
 	}
@@ -79,7 +80,7 @@ struct NavigationView: View {
 
 	var terminateButton: some View {
 		Button {
-			navigationManager.setCurrentView(view: .home)
+			appScreen.setCurrentView(view: .home)
 			navigationManager.stopNavigation()
 		} label: {
 			HStack {

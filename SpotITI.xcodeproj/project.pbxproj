@@ -27,6 +27,7 @@
 		6A9ED46129FD2C7A00C34722 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A9ED46029FD2C7A00C34722 /* ContentView.swift */; };
 		6AB05C362A18B21900C88703 /* SpotITIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AB05C352A18B21900C88703 /* SpotITIError.swift */; };
 		6AB4149629FACA26002F8387 /* CompassView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AB4149529FACA26002F8387 /* CompassView.swift */; };
+		6AC0050C2A39EED8008A1A50 /* AppScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AC0050B2A39EED8008A1A50 /* AppScreen.swift */; };
 		6AFD7B462A0F836500B52A9C /* ClassroomCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AFD7B452A0F836500B52A9C /* ClassroomCard.swift */; };
 		6AFD7B482A0F8C1C00B52A9C /* UtilityCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AFD7B472A0F8C1C00B52A9C /* UtilityCard.swift */; };
 		6AFD7B4A2A0F8DC800B52A9C /* PositionDotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AFD7B492A0F8DC800B52A9C /* PositionDotView.swift */; };
@@ -58,6 +59,7 @@
 		6A9ED46029FD2C7A00C34722 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		6AB05C352A18B21900C88703 /* SpotITIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotITIError.swift; sourceTree = "<group>"; };
 		6AB4149529FACA26002F8387 /* CompassView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompassView.swift; sourceTree = "<group>"; };
+		6AC0050B2A39EED8008A1A50 /* AppScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppScreen.swift; sourceTree = "<group>"; };
 		6AFD7B452A0F836500B52A9C /* ClassroomCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassroomCard.swift; sourceTree = "<group>"; };
 		6AFD7B472A0F8C1C00B52A9C /* UtilityCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityCard.swift; sourceTree = "<group>"; };
 		6AFD7B492A0F8DC800B52A9C /* PositionDotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PositionDotView.swift; sourceTree = "<group>"; };
@@ -139,6 +141,7 @@
 				6A4151C429FD00BB001DF926 /* NavigationManager.swift */,
 				6A3234E12A10DA050087A0CB /* APIManager.swift */,
 				6AFD7B552A0FEC5600B52A9C /* ScanManager.swift */,
+				6AC0050B2A39EED8008A1A50 /* AppScreen.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -285,6 +288,7 @@
 				6A1D6D412A27E09200FD90CE /* Feature.swift in Sources */,
 				6A1D6D3C2A27A7EF00FD90CE /* InfoGrid.swift in Sources */,
 				6AFD7B692A10D21400B52A9C /* Route.swift in Sources */,
+				6AC0050C2A39EED8008A1A50 /* AppScreen.swift in Sources */,
 				6A9ED46129FD2C7A00C34722 /* ContentView.swift in Sources */,
 				6AFD7B462A0F836500B52A9C /* ClassroomCard.swift in Sources */,
 				6A42C9372A20E28800F612C9 /* Spot.swift in Sources */,

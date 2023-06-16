@@ -13,6 +13,7 @@ struct SpotITIApp: App {
 	@StateObject private var navigationManager = NavigationManager()
 	@StateObject private var scanManager = ScanManager()
 	@StateObject private var apiManager = APIManager()
+    @StateObject private var appScreen = AppScreen()
 	
 	var body: some Scene {
 		WindowGroup {
@@ -20,6 +21,7 @@ struct SpotITIApp: App {
 				.environmentObject(navigationManager)
 				.environmentObject(scanManager)
 				.environmentObject(apiManager)
+                .environmentObject(appScreen)
 		}
 	}
 }

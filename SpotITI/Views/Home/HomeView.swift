@@ -13,6 +13,7 @@ struct HomeView: View {
 	@EnvironmentObject private var navigationManager: NavigationManager
 	@EnvironmentObject private var apiManager: APIManager
 	@EnvironmentObject private var scanManager: ScanManager
+    @EnvironmentObject private var appScreen: AppScreen
 	
 	@Binding var selectedSpot: Spot?
 	@State private var searchText: String = ""
@@ -43,13 +44,13 @@ struct HomeView: View {
 								do {
 									if let route = try await apiManager.getRoutes(startNodeId: currentNodeId, endCategory: category.type).first {
 										navigationManager.startNavigation(route: route)
+                                        appScreen.setCurrentView(view: .navigation)
 									}
 								} catch {
 									print(error.localizedDescription)
 								}
 							}
 						}
-						print("Tapped")
 					} label: {
 						UtilityCard(name: category.type.name, icon: category.type.icon)
 					}
@@ -73,7 +74,7 @@ struct HomeView: View {
 							ForEach(classroomsSearchResults(classrooms: blockClassroom), id: \.name) { classroom in
 								Button {
 									selectedSpot = classroom
-									navigationManager.setCurrentView(view: .navigationPreview)
+									appScreen.setCurrentView(view: .navigationPreview)
 									generator.impactOccurred()
 								} label: {
 									ClassroomCard(name: classroom.name)
@@ -126,5 +127,6 @@ struct HomeView_Previews: PreviewProvider {
 			.environmentObject(NavigationManager())
 			.environmentObject(ScanManager())
 			.environmentObject(APIManager())
+            .environmentObject(AppScreen())
 	}
 }
