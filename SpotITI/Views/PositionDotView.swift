@@ -12,11 +12,11 @@ struct PositionDotView: View {
 		ZStack {
 			Circle()
 				.frame(width: 35, height: 35)
-				.foregroundColor(.white)
+				.foregroundStyle(.white)
 				.shadow(color: .black.opacity(0.1), radius: 10)
 			Circle()
 				.frame(width: 25, height: 25)
-				.foregroundColor(.blue)
+				.foregroundStyle(.blue)
 		}
     }
 }

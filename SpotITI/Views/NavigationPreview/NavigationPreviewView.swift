@@ -9,11 +9,11 @@ import SwiftUI
 
 struct NavigationPreviewView: View {
 	
-	@EnvironmentObject private var navigationManager: NavigationManager
-	@EnvironmentObject private var apiManager: APIManager
-	@EnvironmentObject private var scanManager: ScanManager
-    @EnvironmentObject private var appScreen: AppScreen
-	
+	@Environment(NavigationManager.self) private var navigationManager: NavigationManager
+	@Environment(APIManager.self) private var apiManager: APIManager
+	@Environment(ScanManager.self) private var scanManager: ScanManager
+	@Environment(AppScreen.self) private var appScreen: AppScreen
+
 	@State var canNavigate: Bool = false
 	@State var route: Route?
 	
@@ -44,7 +44,7 @@ struct NavigationPreviewView: View {
 					.padding(8)
 					.background {
 						Circle()
-							.foregroundColor(.gray.opacity(0.2))
+							.foregroundStyle(.gray.opacity(0.2))
 					}
 			}
 			.tint(.gray)
@@ -65,7 +65,7 @@ struct NavigationPreviewView: View {
 			}
 			.background {
 				Capsule()
-					.foregroundColor(Color(uiColor: .secondarySystemBackground))
+					.foregroundStyle(Color(uiColor: .secondarySystemBackground))
 			}
 			.frame(maxWidth: .infinity, alignment: .trailing)
 		}
@@ -77,11 +77,11 @@ struct NavigationPreviewView: View {
 		HStack(spacing: 4) {
 			Text(Double(route?.lenght ?? 0)/25 * 1.3 / 60, format: .number) +
 			Text("min")
-				.foregroundColor(.secondary)
+				.foregroundStyle(.secondary)
 			Text("•")
 			Text((route?.lenght ?? 0)/25, format: .number) +
 			Text("m")
-				.foregroundColor(.secondary)
+				.foregroundStyle(.secondary)
 		}
 		.font(.headline)
 	}
@@ -97,7 +97,7 @@ struct NavigationPreviewView: View {
 				Text("Naviga")
 			}
 			.font(.headline)
-			.foregroundColor(.white)
+			.foregroundStyle(.white)
 			.padding(8)
 		}
 		.buttonStyle(.borderedProminent)
@@ -127,8 +127,8 @@ struct NavigationPreviewView_Previews: PreviewProvider {
 	static var previews: some View {
 		NavigationPreviewView(spot: Spot.mockup)
 			.previewLayout(.sizeThatFits)
-			.environmentObject(NavigationManager())
-			.environmentObject(ScanManager())
-			.environmentObject(APIManager())
+			.environment(NavigationManager())
+			.environment(ScanManager())
+			.environment(APIManager())
 	}
 }

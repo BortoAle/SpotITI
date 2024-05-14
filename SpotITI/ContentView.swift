@@ -9,11 +9,11 @@ import SwiftUI
 
 struct ContentView: View {
 	
-	@EnvironmentObject private var navigationManager: NavigationManager
-	@EnvironmentObject private var apiManager: APIManager
-	@EnvironmentObject var scanManager: ScanManager
-    @EnvironmentObject var appScreen: AppScreen
-	
+	@Environment(NavigationManager.self) private var navigationManager: NavigationManager
+	@Environment(APIManager.self) private var apiManager: APIManager
+	@Environment(ScanManager.self) var scanManager: ScanManager
+	@Environment(AppScreen.self) var appScreen: AppScreen
+
 	@AppStorage("showWelcomeScreen") var showWelcomeScreen: Bool = true
 	@AppStorage("utilityDisplayMode") var utilityDisplayMode: UtilityDisplayMode = .grouped
 	
@@ -35,7 +35,11 @@ struct ContentView: View {
 					mainContentView
 				}
 			}
-				.presentationDetents(appScreen.presentationDetents, selection: $appScreen.selectedDetent)
+			.presentationDetents(appScreen.presentationDetents, selection: Binding(get: {
+				appScreen.selectedDetent
+			}, set: { newValue in
+				appScreen.selectedDetent = newValue
+			}))
 				.presentationBackgroundInteraction(.disabled)
 				.interactiveDismissDisabled(true)
 				.presentationCornerRadius(25)
@@ -92,9 +96,9 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
 	static var previews: some View {
 		ContentView()
-			.environmentObject(NavigationManager())
-			.environmentObject(ScanManager())
-			.environmentObject(APIManager())
-            .environmentObject(AppScreen())
+			.environment(NavigationManager())
+			.environment(ScanManager())
+			.environment(APIManager())
+            .environment(AppScreen())
 	}
 }

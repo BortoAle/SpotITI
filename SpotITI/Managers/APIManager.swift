@@ -7,11 +7,12 @@
 
 import SwiftUI
 
-class APIManager: ObservableObject {
+@Observable
+class APIManager {
 	
-	@Published var classrooms: [Character: [Spot]] = [:]
-	@Published var utilities: [Spot] = []
-	@Published var categories: [Category] = []
+	var classrooms: [Character: [Spot]] = [:]
+	var utilities: [Spot] = []
+	var categories: [Category] = []
 	
 	/// Fetches available spots from the server and categorizes the classrooms.
 	///

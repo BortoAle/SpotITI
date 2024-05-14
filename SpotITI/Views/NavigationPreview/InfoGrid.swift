@@ -29,7 +29,7 @@ struct InfoGrid: View {
 			infoItem(image: "videoprojector", text: "Proiettore")
 		}
 		.font(.subheadline)
-		.foregroundColor(.secondary)
+		.foregroundStyle(.secondary)
 	}
 	
 	// Grid row for details
@@ -39,9 +39,9 @@ struct InfoGrid: View {
 			Text(spot.data.seats ?? "N/A")
 			Text(spot.data.pc ?? "N/A")
 			Image(systemName: spot.data.has_iwb ? "checkmark" : "xmark")
-				.foregroundColor(spot.data.has_iwb ? .green : .red)
+				.foregroundStyle(spot.data.has_iwb ? .green : .red)
 			Image(systemName: spot.data.has_projector ? "checkmark" : "xmark")
-				.foregroundColor(spot.data.has_projector ? .green : .red)
+				.foregroundStyle(spot.data.has_projector ? .green : .red)
 		}
 	}
 	

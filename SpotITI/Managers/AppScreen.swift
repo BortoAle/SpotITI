@@ -7,16 +7,17 @@
 
 import SwiftUI
 
-class AppScreen: ObservableObject {
+@Observable
+class AppScreen {
     
     // Sheet dimension management
-    @Published var currentView: ViewType = .home
-    @Published var selectedDetent: PresentationDetent = .large
-    @Published var presentationDetents: Set<PresentationDetent> = []
+    var currentView: ViewType = .home
+    var selectedDetent: PresentationDetent = .large
+    var presentationDetents: Set<PresentationDetent> = []
     
     /// Adjusts the size of the view sheet to match the size requirements of the current view.
     ///
-    /// This method is used to set the current view to a specified view type, and adjusts the size of the sheet
+    /// This method is used to set the current view to a specifi ed view type, and adjusts the size of the sheet
     /// to fit that view type. The size is defined by the detent associated with the specified view type.
     ///
     /// - Parameter view: The view type that should be set as the current view.

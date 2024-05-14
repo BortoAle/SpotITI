@@ -9,10 +9,10 @@ import SwiftUI
 
 struct NavigationView: View {
 	
-	@EnvironmentObject var navigationManager: NavigationManager
-	@EnvironmentObject var scanManager: ScanManager
-	@EnvironmentObject var apiManager: APIManager
-    @EnvironmentObject private var appScreen: AppScreen
+	@Environment(NavigationManager.self) var navigationManager: NavigationManager
+	@Environment(ScanManager.self) var scanManager: ScanManager
+	@Environment(APIManager.self) var apiManager: APIManager
+	@Environment(AppScreen.self) private var appScreen: AppScreen
 
 	private let buttonColor: Color = .red
 	private let capsuleColor: Color = Color(uiColor: .secondarySystemBackground)
@@ -24,7 +24,7 @@ struct NavigationView: View {
 			progressView
 		}
 		.padding()
-		.onChange(of: scanManager.ean8Code ?? 0) { newValue in
+		.onChange(of: scanManager.ean8Code ?? 0) { _, newValue in
 			navigationManager.updatePosition(barcodeValue: newValue)
 		}
 	}
@@ -55,7 +55,7 @@ struct NavigationView: View {
 		.padding(.leading, 32)
 		.background {
 			Capsule()
-				.foregroundColor(capsuleColor)
+				.foregroundStyle(capsuleColor)
 		}
 		.frame(maxWidth: .infinity, alignment: .trailing)
 	}
@@ -67,7 +67,7 @@ struct NavigationView: View {
 				.fontWeight(.semibold)
 			Text("completato")
 				.font(.caption2)
-				.foregroundColor(.secondary)
+				.foregroundStyle(.secondary)
 		}
 		.font(.headline)
 	}
@@ -88,7 +88,7 @@ struct NavigationView: View {
 				Text("Termina")
 			}
 			.font(.headline)
-			.foregroundColor(.white)
+			.foregroundStyle(.white)
 			.padding(paddingSize)
 		}
 		.buttonStyle(.borderedProminent)
@@ -101,8 +101,8 @@ struct NavigationView_Previews: PreviewProvider {
 	static var previews: some View {
 		NavigationView()
 			.previewLayout(.sizeThatFits)
-			.environmentObject(NavigationManager())
-			.environmentObject(ScanManager())
-			.environmentObject(APIManager())
+			.environment(NavigationManager())
+			.environment(ScanManager())
+			.environment(APIManager())
 	}
 }

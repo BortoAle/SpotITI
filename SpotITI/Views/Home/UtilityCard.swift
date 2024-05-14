@@ -21,11 +21,11 @@ struct UtilityCard: View {
 		}
 		.padding()
 		.fixedSize(horizontal: false, vertical: true)
-		.foregroundColor(.primary)
+		.foregroundStyle(.primary)
 		.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
 		.background {
 			RoundedRectangle(cornerRadius: 8)
-				.foregroundColor(Color(uiColor: .secondarySystemBackground))
+				.foregroundStyle(Color(uiColor: .secondarySystemBackground))
 		}
 	}
 }

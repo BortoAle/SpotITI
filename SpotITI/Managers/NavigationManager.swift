@@ -11,13 +11,14 @@ import CoreMotion
 import CoreLocation
 import ScanditBarcodeCapture
 
-class NavigationManager: NSObject, ObservableObject, AVCaptureMetadataOutputObjectsDelegate, CLLocationManagerDelegate {
+@Observable
+class NavigationManager: NSObject, AVCaptureMetadataOutputObjectsDelegate, CLLocationManagerDelegate {
 	
 	// Determines if navigation is active or not
-	@Published var isNavigating: Bool = false
+	var isNavigating: Bool = false
 	
 	// The spot selected by the user
-	@Published var selectedSpot: Spot?
+	var selectedSpot: Spot?
 	
 	// The current active route for navigation
 	var currentRoute: Route?
@@ -30,10 +31,10 @@ class NavigationManager: NSObject, ObservableObject, AVCaptureMetadataOutputObje
 	var nextNode: Node?
 	
 	// 3D rotation values for the user compass
-	@Published var rotation3D: (x: CGFloat, y: CGFloat, z: CGFloat) = (0, 0, 0)
+	var rotation3D: (x: CGFloat, y: CGFloat, z: CGFloat) = (0, 0, 0)
 	
 	// 2D rotation of the compass
-	@Published var heading: Double = 0
+	var heading: Double = 0
 	
 	// Other properties related to the device's motion and location tracking
 	private var rotation: CLLocationDirection = 0

@@ -15,7 +15,7 @@ struct ClassroomCard: View {
         Text(name)
 			.font(.title)
 			.lineLimit(1)
-			.foregroundColor(.primary)
+			.foregroundStyle(.primary)
 			.minimumScaleFactor(0.5)
 			.padding(.horizontal, 24)
 			.padding(.vertical, 8)
@@ -24,7 +24,7 @@ struct ClassroomCard: View {
 			.frame(minHeight: 50, maxHeight: 100)
 			.background {
 				RoundedRectangle(cornerRadius: 8)
-					.foregroundColor(Color(uiColor: .secondarySystemBackground))
+					.foregroundStyle(Color(uiColor: .secondarySystemBackground))
 			}
     }
 }

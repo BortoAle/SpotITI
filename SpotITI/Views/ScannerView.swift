@@ -11,7 +11,7 @@ import ScanditBarcodeCapture
 
 struct ScannerView: UIViewRepresentable {
 	
-	@ObservedObject var scanner: ScanManager
+	@State var scanner: ScanManager
 
 	func makeUIView(context: Context) -> ScanditCaptureCore.DataCaptureView {
 		let captureView = DataCaptureView(context: scanner.dataCaptureContext, frame: .zero)

@@ -8,13 +8,14 @@
 import ScanditBarcodeCapture
 import ScanditCaptureCore
 
-class ScanManager: NSObject, ObservableObject {
+@Observable
+class ScanManager: NSObject {
 
 	let dataCaptureContext: DataCaptureContext
 	let barcodeCapture: BarcodeCapture
 	let camera: Camera?
 	
-	@Published var ean8Code: Int?
+	var ean8Code: Int?
 	
 	override init() {
 		

@@ -20,7 +20,7 @@ struct Feature: View {
 				.fontWeight(.heavy)
 				.scaledToFit()
 				.padding(8)
-				.foregroundColor(.primary)
+				.foregroundStyle(.primary)
 			VStack(alignment: .leading, spacing: 2) {
 				Text(title)
 					.font(.title3)

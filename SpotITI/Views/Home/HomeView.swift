@@ -10,11 +10,11 @@ import AVFoundation
 
 struct HomeView: View {
 	
-	@EnvironmentObject private var navigationManager: NavigationManager
-	@EnvironmentObject private var apiManager: APIManager
-	@EnvironmentObject private var scanManager: ScanManager
-    @EnvironmentObject private var appScreen: AppScreen
-	
+	@Environment(NavigationManager.self) private var navigationManager: NavigationManager
+	@Environment(APIManager.self) private var apiManager: APIManager
+	@Environment(ScanManager.self) private var scanManager: ScanManager
+	@Environment(AppScreen.self) private var appScreen: AppScreen
+
 	@Binding var selectedSpot: Spot?
 	@State private var searchText: String = ""
 	
@@ -85,7 +85,7 @@ struct HomeView: View {
 				} header: {
 					Text(String(block))
 						.font(.subheadline)
-						.foregroundColor(.secondary)
+						.foregroundStyle(.secondary)
 				}
 			}
 		} header: {
@@ -124,9 +124,9 @@ struct HomeView: View {
 struct HomeView_Previews: PreviewProvider {
 	static var previews: some View {
 		HomeView(selectedSpot: .constant(Spot.mockup))
-			.environmentObject(NavigationManager())
-			.environmentObject(ScanManager())
-			.environmentObject(APIManager())
-            .environmentObject(AppScreen())
+			.environment(NavigationManager())
+			.environment(ScanManager())
+			.environment(APIManager())
+            .environment(AppScreen())
 	}
 }

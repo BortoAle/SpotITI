@@ -32,7 +32,7 @@ struct WelcomeView: View {
 				.fontWeight(.semibold)
 			Text("Trova la via più breve")
 				.font(.title3)
-				.foregroundColor(.secondary)
+				.foregroundStyle(.secondary)
 				.multilineTextAlignment(.center)
 		}
 	}
@@ -41,7 +41,6 @@ struct WelcomeView: View {
 		VStack(alignment: .leading, spacing: 32) {
 			Feature(imageName: "arrow.up", title: "Naviga", description: "Scegli l'aula di destinazione e sei subito pronto a navigare.")
 			Feature(imageName: "figure.walk", title: "Risparmia", description: "Risparmia kcal e minuti preziosi. L'app troverà sempre la strada più corta.")
-			Feature(imageName: "info", title: "Scopri", description: "Trova tutte le informazioni importanti sulle aule.")
 			Feature(imageName: "info", title: "Scopri", description: "Trova tutte le informazioni importanti sulle aule.")
 		}
 	}

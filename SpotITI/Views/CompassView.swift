@@ -13,8 +13,8 @@ import CoreHaptics
 
 struct CompassView: View {
 	
-	@EnvironmentObject private var navigationManager: NavigationManager
-	
+	@Environment(NavigationManager.self) private var navigationManager: NavigationManager
+
 	@State private var hapticEngine: CHHapticEngine?
 	
 	let width = UIScreen.main.bounds.width
@@ -26,7 +26,7 @@ struct CompassView: View {
 				.scaledToFit()
 				.frame(width: width/2)
 				.fontWeight(.black)
-				.foregroundColor(Color(uiColor: .secondarySystemBackground))
+				.foregroundStyle(Color(uiColor: .secondarySystemBackground))
 				.rotationEffect(.degrees(navigationManager.heading))
 				.rotation3DEffect(
 					.degrees(navigationManager.rotation3D.x),
@@ -42,7 +42,7 @@ struct CompassView: View {
 					anchorZ: 0.0,
 					perspective: 0.5
 				)
-				.foregroundColor(Color(uiColor: .systemBackground))
+				.foregroundStyle(Color(uiColor: .systemBackground))
 		}
 	}
 }
@@ -51,6 +51,6 @@ struct CompassView_Previews: PreviewProvider {
 	static var previews: some View {
 		CompassView()
 			.previewLayout(.sizeThatFits)
-			.environmentObject(NavigationManager())
+			.environment(NavigationManager())
 	}
 }

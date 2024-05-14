@@ -10,18 +10,18 @@ import SwiftUI
 @main
 struct SpotITIApp: App {
 	
-	@StateObject private var navigationManager = NavigationManager()
-	@StateObject private var scanManager = ScanManager()
-	@StateObject private var apiManager = APIManager()
-    @StateObject private var appScreen = AppScreen()
+	@State private var navigationManager = NavigationManager()
+	@State private var scanManager = ScanManager()
+	@State private var apiManager = APIManager()
+    @State private var appScreen = AppScreen()
 	
 	var body: some Scene {
 		WindowGroup {
 			ContentView()
-				.environmentObject(navigationManager)
-				.environmentObject(scanManager)
-				.environmentObject(apiManager)
-                .environmentObject(appScreen)
+				.environment(navigationManager)
+				.environment(scanManager)
+				.environment(apiManager)
+                .environment(appScreen)
 		}
 	}
 }
