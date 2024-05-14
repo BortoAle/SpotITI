@@ -47,10 +47,8 @@ struct CompassView: View {
 	}
 }
 
-struct CompassView_Previews: PreviewProvider {
-	static var previews: some View {
-		CompassView()
-			.previewLayout(.sizeThatFits)
-			.environment(NavigationManager())
-	}
+#Preview {
+	CompassView()
+		.previewLayout(.sizeThatFits)
+		.environment(NavigationManager())
 }

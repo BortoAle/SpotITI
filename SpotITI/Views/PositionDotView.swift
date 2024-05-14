@@ -21,9 +21,7 @@ struct PositionDotView: View {
     }
 }
 
-struct PositionDotView_Previews: PreviewProvider {
-    static var previews: some View {
-        PositionDotView()
-			.previewLayout(.sizeThatFits)
-    }
+#Preview {
+	PositionDotView()
+		.previewLayout(.sizeThatFits)
 }

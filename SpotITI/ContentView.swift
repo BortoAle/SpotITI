@@ -93,12 +93,10 @@ struct ContentView: View {
 	
 }
 
-struct ContentView_Previews: PreviewProvider {
-	static var previews: some View {
-		ContentView()
-			.environment(NavigationManager())
-			.environment(ScanManager())
-			.environment(APIManager())
-            .environment(AppScreen())
-	}
+#Preview {
+	ContentView()
+		.environment(NavigationManager())
+		.environment(ScanManager())
+		.environment(APIManager())
+		.environment(AppScreen())
 }

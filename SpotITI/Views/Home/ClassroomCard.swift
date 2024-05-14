@@ -29,9 +29,10 @@ struct ClassroomCard: View {
     }
 }
 
-struct ClassroomCard_Previews: PreviewProvider {
-    static var previews: some View {
-		ClassroomCard(name: "AB")
-			.previewLayout(.fixed(width: 85, height: 40))
-    }
+#Preview(traits: .fixedLayout(width: 85, height: 40)) {
+	HomeView(selectedSpot: .constant(Spot.mockup))
+		.environment(NavigationManager())
+		.environment(ScanManager())
+		.environment(APIManager())
+		.environment(AppScreen())
 }

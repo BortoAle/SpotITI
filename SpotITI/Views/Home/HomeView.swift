@@ -121,12 +121,10 @@ struct HomeView: View {
 	
 }
 
-struct HomeView_Previews: PreviewProvider {
-	static var previews: some View {
-		HomeView(selectedSpot: .constant(Spot.mockup))
-			.environment(NavigationManager())
-			.environment(ScanManager())
-			.environment(APIManager())
-            .environment(AppScreen())
-	}
+#Preview {
+	HomeView(selectedSpot: .constant(Spot.mockup))
+		.environment(NavigationManager())
+		.environment(ScanManager())
+		.environment(APIManager())
+		.environment(AppScreen())
 }

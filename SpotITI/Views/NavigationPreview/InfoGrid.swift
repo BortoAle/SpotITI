@@ -54,9 +54,6 @@ struct InfoGrid: View {
 	}
 }
 
-struct InfoGrid_Previews: PreviewProvider {
-    static var previews: some View {
-		InfoGrid(spot: Spot.mockup)
-			.previewLayout(.sizeThatFits)
-    }
+#Preview(traits: .sizeThatFitsLayout) {
+	InfoGrid(spot: Spot.mockup)
 }

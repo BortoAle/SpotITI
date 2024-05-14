@@ -123,12 +123,10 @@ struct NavigationPreviewView: View {
 	
 }
 
-struct NavigationPreviewView_Previews: PreviewProvider {
-	static var previews: some View {
-		NavigationPreviewView(spot: Spot.mockup)
-			.previewLayout(.sizeThatFits)
-			.environment(NavigationManager())
-			.environment(ScanManager())
-			.environment(APIManager())
-	}
+#Preview {
+	NavigationPreviewView(spot: Spot.mockup)
+		.previewLayout(.sizeThatFits)
+		.environment(NavigationManager())
+		.environment(ScanManager())
+		.environment(APIManager())
 }

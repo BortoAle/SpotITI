@@ -33,9 +33,6 @@ struct Feature: View {
 	}
 }
 
-
-struct Feature_Previews: PreviewProvider {
-    static var previews: some View {
-		Feature(imageName: "compass", title: "Bussola", description: "Orientati facilmente")
-    }
+#Preview {
+	Feature(imageName: "compass", title: "Bussola", description: "Orientati facilmente")
 }
