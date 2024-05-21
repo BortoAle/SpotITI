@@ -17,7 +17,7 @@ class AppScreen {
     
     /// Adjusts the size of the view sheet to match the size requirements of the current view.
     ///
-    /// This method is used to set the current view to a specifi ed view type, and adjusts the size of the sheet
+    /// This method is used to set the current view to a specified view type, and adjusts the size of the sheet
     /// to fit that view type. The size is defined by the detent associated with the specified view type.
     ///
     /// - Parameter view: The view type that should be set as the current view.
